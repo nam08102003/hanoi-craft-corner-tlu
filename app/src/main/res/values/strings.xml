@@ -3,4 +3,8 @@
     <string name="btnString">Đăng ký</string>
     <string name="backBtn">back</string>
     <string name="Tittle">Chưa có tài khoản?\nĐăng ký ngay!</string>
+    <string name="hintInpUser">Tên đăng nhập</string>
+    <string name="inpPassText">Mật khẩu</string>
+    <string name="inpEmailText">Email</string>
+    <string name="ClickableText">Đăng nhập</string>
 </resources>

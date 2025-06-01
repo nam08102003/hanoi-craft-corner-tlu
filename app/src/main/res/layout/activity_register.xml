@@ -23,9 +23,11 @@
             android:layout_marginTop="24dp"
             android:background="@android:color/transparent"
             android:contentDescription="@string/backBtn"
+            android:scaleType="fitCenter"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/back" />
+
         <TextView
             android:id="@+id/Tittle"
             android:layout_width="0dp"
@@ -33,7 +35,7 @@
             android:layout_marginStart="32dp"
             android:layout_marginTop="96dp"
             android:text="@string/Tittle"
-            android:textColor="#5E40B5"
+            android:textColor="@color/primary"
             android:textSize="30sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
@@ -47,13 +49,14 @@
             android:layout_marginStart="35dp"
             android:layout_marginTop="52dp"
             android:layout_marginEnd="35dp"
-            android:background="@drawable/sebedf0sw1cr24bf5f6f7"
-            android:hint="Tên đăng nhập"
+            android:autofillHints="username"
+            android:background="@drawable/input_text_background"
+            android:hint="@string/hintInpUser"
             android:inputType="text"
             android:paddingVertical="18dp"
-            android:paddingLeft="16dp"
-            android:paddingRight="32dp"
-            android:textColor="#B3B9C4"
+            android:paddingStart="16dp"
+            android:paddingEnd="32dp"
+            android:textColor="@color/black"
             android:textSize="12sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
@@ -62,50 +65,54 @@
             app:layout_constraintTop_toBottomOf="@+id/Tittle" />
 
         <EditText
-            android:id="@+id/rnh0qxapoywn"
+            android:id="@+id/inpEmail"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="35dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="16dp"
             android:layout_marginEnd="35dp"
-            android:background="@drawable/sebedf0sw1cr24bf5f6f7"
-            android:hint="Email"
+            android:background="@drawable/input_text_background"
+            android:hint="@string/inpEmailText"
+            android:autofillHints="emailAddress"
             android:inputType="text"
             android:paddingVertical="18dp"
-            android:paddingLeft="16dp"
-            android:paddingRight="32dp"
-            android:textColor="#B3B9C4"
+            android:paddingStart="16dp"
+            android:paddingEnd="32dp"
+            android:textColor="@color/black"
             android:textSize="12sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/inpUsername" />
+            app:layout_constraintTop_toBottomOf="@+id/inpUsername"
+            tools:ignore="TextFields" />
 
         <EditText
-            android:id="@+id/rnh0qxapoywn2"
+            android:id="@+id/inpPassword"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="35dp"
             android:layout_marginTop="20dp"
             android:layout_marginEnd="35dp"
-            android:background="@drawable/sebedf0sw1cr24bf5f6f7"
-            android:hint="Email"
+            android:background="@drawable/input_text_background"
+            android:hint="@string/inpPassText"
             android:inputType="text"
+            android:autofillHints="password"
             android:paddingVertical="18dp"
-            android:paddingLeft="16dp"
-            android:paddingRight="32dp"
-            android:textColor="#B3B9C4"
+            android:paddingStart="16dp"
+            android:paddingEnd="32dp"
+            android:textColor="@color/black"
             android:textSize="12sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/rnh0qxapoywn" />
+            app:layout_constraintTop_toBottomOf="@+id/inpEmail"
+            tools:ignore="TextFields" />
 
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/registerButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="33dp"
@@ -116,19 +123,34 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/rnh0qxapoywn2" />
+            app:layout_constraintTop_toBottomOf="@+id/inpPassword" />
 
-        <TextView
-            android:id="@+id/rr96mpkh2vsl"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="46dp"
-            android:text="Đã có tài khoản? Đăng nhập"
-            android:textColor="#1E232C"
-            android:textSize="14sp"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginStart="116dp"
+            android:layout_marginTop="24dp"
+            android:orientation="horizontal"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/button" />
+            app:layout_constraintTop_toBottomOf="@+id/registerButton">
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Đã có tài khoản? " />
+
+            <TextView
+                android:id="@+id/ClickableText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:focusable="true"
+                android:text="@string/ClickableText"
+                android:textColor="@color/primary"
+                android:textSize="14sp" />
+        </LinearLayout>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
