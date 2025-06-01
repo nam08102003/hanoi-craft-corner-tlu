@@ -17,8 +17,8 @@
 
         <ImageButton
             android:id="@+id/imageButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:layout_marginStart="24dp"
             android:layout_marginTop="24dp"
             android:background="@android:color/transparent"
@@ -26,22 +26,22 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/back" />
-
         <TextView
-            android:id="@+id/r6scw084pc4h"
-            android:layout_width="271dp"
+            android:id="@+id/Tittle"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
             android:layout_marginTop="96dp"
-            android:text="Chưa có tài khoản?\nĐăng ký ngay!"
+            android:text="@string/Tittle"
             android:textColor="#5E40B5"
             android:textSize="30sp"
             android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <EditText
-            android:id="@+id/r1thyk9mfuqv"
+            android:id="@+id/inpUsername"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="35dp"
@@ -59,7 +59,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/r6scw084pc4h" />
+            app:layout_constraintTop_toBottomOf="@+id/Tittle" />
 
         <EditText
             android:id="@+id/rnh0qxapoywn"
@@ -80,7 +80,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/r1thyk9mfuqv" />
+            app:layout_constraintTop_toBottomOf="@+id/inpUsername" />
 
         <EditText
             android:id="@+id/rnh0qxapoywn2"

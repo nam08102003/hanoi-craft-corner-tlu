@@ -2,4 +2,5 @@
     <string name="app_name">Ha Noi Craft Corner</string>
     <string name="btnString">Đăng ký</string>
     <string name="backBtn">back</string>
+    <string name="Tittle">Chưa có tài khoản?\nĐăng ký ngay!</string>
 </resources>
