@@ -34,7 +34,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
             android:layout_marginTop="96dp"
-            android:text="@string/Tittle"
+            android:text="@string/Title"
             android:textColor="@color/primary"
             android:textSize="30sp"
             android:textStyle="bold"
@@ -136,7 +136,7 @@
 
             <TextView
                 android:id="@+id/textView"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Đã có tài khoản? " />
