@@ -7,6 +7,10 @@ android {
     namespace = "com.example.hanoicraftcorner"
     compileSdk = 35
 
+    buildFeatures {
+        buildConfig = true
+    }
+
     defaultConfig {
         applicationId = "com.example.hanoicraftcorner"
         minSdk = 24
@@ -15,6 +19,9 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField("String", "SMTP_EMAIL", "\"${property("SMTP_EMAIL")}\"")
+        buildConfigField("String", "SMTP_APP_PASSWORD", "\"${property("SMTP_APP_PASSWORD")}\"")
     }
 
     buildTypes {
@@ -29,6 +36,11 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
+    }
+
+    packagingOptions {
+        exclude("META-INF/NOTICE.md")
+        exclude("META-INF/LICENSE.md")
     }
 }
 
@@ -45,4 +57,9 @@ dependencies {
 //    Firebase
     implementation(platform("com.google.firebase:firebase-bom:33.14.0"))
     implementation("com.google.firebase:firebase-analytics")
+    implementation("com.google.firebase:firebase-firestore:24.10.0")
+
+//    JavaMail
+    implementation("com.sun.mail:android-mail:1.6.7")
+    implementation("com.sun.mail:android-activation:1.6.7")
 }
