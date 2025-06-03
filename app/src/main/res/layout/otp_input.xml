@@ -1,0 +1,35 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/otpContainer"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center"
+    android:layout_marginTop="32dp"
+    android:layout_gravity="center"
+    android:padding="8dp">
+
+    <!-- Mỗi EditText đại diện 1 ô OTP -->
+    <EditText
+        android:id="@+id/otp1"
+        style="@style/OtpEditTextStyle" />
+
+    <EditText
+        android:id="@+id/otp2"
+        style="@style/OtpEditTextStyle" />
+
+    <EditText
+        android:id="@+id/otp3"
+        style="@style/OtpEditTextStyle" />
+
+    <EditText
+        android:id="@+id/otp4"
+        style="@style/OtpEditTextStyle" />
+
+    <EditText
+        android:id="@+id/otp5"
+        style="@style/OtpEditTextStyle" />
+
+    <EditText
+        android:id="@+id/otp6"
+        style="@style/OtpEditTextStyle" />
+</LinearLayout>
