@@ -19,6 +19,20 @@
         android:theme="@style/Theme.HaNoiCraftCorner"
         tools:targetApi="31">
         <activity
+            android:name=".ResetPasswordSuccessActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ResetPasswordActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ForgotPasswordVerifyActivity"
+            android:exported="false" />
+        <activity
+            android:name=".MainActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ForgotPasswordActivity"
+            android:exported="true">
             android:name="register_artisan.Register_Artisan"
             android:exported="true" >
             <intent-filter>

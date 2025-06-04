@@ -1,5 +1,15 @@
 <resources>
     <string name="app_name">Ha Noi Craft Corner</string>
+    <string name="edit_email">Email</string>
+    <string name="edit_new_password">Mật khẩu mới</string>
+    <string name="edit_confirm_password">Nhập lại mật khẩu</string>
+    <string name="btn_continue">Tiếp tục</string>
+    <string name="btn_submit">Xác nhận</string>
+    <string name="btn_back">Quay lại</string>
+    <string name="forget_password_title">Quên mật khẩu</string>
+    <string name="reset_password_title">Đặt lại mật khẩu</string>
+    <string name="get_otp">Vui lòng kiểm tra email của bạn để lấy mã xác thực.</string>
+    <string name="reset_password_success">Đặt lại mật khẩu  thành công.</string>
     <string name="btnString">Đăng ký</string>
     <string name="backBtn">back</string>
     <string name="Title">Chưa có tài khoản?\nĐăng ký ngay!</string>
@@ -15,4 +25,3 @@
     <string name="contDesDeleteImage">Xóa ảnh</string>
     <string name="contDesImageItem">Ảnh sản phẩm</string>
 </resources>
-
