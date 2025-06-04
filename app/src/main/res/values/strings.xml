@@ -4,11 +4,15 @@
     <string name="backBtn">back</string>
     <string name="Title">Chưa có tài khoản?\nĐăng ký ngay!</string>
     <string name="hintInpUser">Tên đăng nhập</string>
-    <string name="inpPassText">Mật khẩu</string>
+    <string name="inpPassText">Mật khẩu (ít nhất 6 ký tự)</string>
     <string name="inpEmailText">Email</string>
     <string name="ClickableText">Đăng nhập</string>
     <string name="Title_register_artisan">Đăng ký tài khoản nghệ nhân</string>
     <string name="hintInpStoreOrBrand">Tên thương hiệu/Cửa hàng</string>
     <string name="hintInpPhone">Số điện thoại</string>
     <string name="hintInpIntroduce">Giới thiệu</string>
+    <string name="hintInpUserArtisan">Tên người dùng</string>
+    <string name="contDesDeleteImage">Xóa ảnh</string>
+    <string name="contDesImageItem">Ảnh sản phẩm</string>
 </resources>
+
