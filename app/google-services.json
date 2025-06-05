@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "781709365425",
+    "project_id": "hanoit-craft-corner",
+    "storage_bucket": "hanoit-craft-corner.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:781709365425:android:dfcb58d3a9177383215290",
+        "android_client_info": {
+          "package_name": "com.example.hanoicraftcorner"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCtVQtyvmiv301boDnGnvC7ns6pK1s9fzY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
