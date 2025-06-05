@@ -1,4 +1,4 @@
-package register;
+package com.example.hanoicraftcorner.adapter;
 
 import android.content.Context;
 import android.net.Uri;

@@ -13,8 +13,8 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 public class GmailSender {
-    private final String senderEmail;
-    private final String senderPassword;
+    public final String senderEmail;
+    public final String senderPassword;
 
     public GmailSender(String senderEmail, String senderPassword) {
         this.senderEmail = senderEmail;

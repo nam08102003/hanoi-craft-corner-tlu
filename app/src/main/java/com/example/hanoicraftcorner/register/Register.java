@@ -1,4 +1,4 @@
-package register;
+package com.example.hanoicraftcorner.register;
 
 
 import static android.content.ContentValues.TAG;

@@ -90,7 +90,7 @@
         android:layout_marginEnd="35dp"
         android:background="@drawable/input_text_background"
         android:hint="@string/inpPassText"
-        android:inputType="text"
+        android:inputType="textPassword"
         android:autofillHints="password"
         android:paddingVertical="18dp"
         android:paddingStart="16dp"

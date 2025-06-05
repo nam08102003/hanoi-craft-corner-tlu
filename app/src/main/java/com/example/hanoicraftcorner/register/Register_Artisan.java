@@ -1,4 +1,4 @@
-package register_artisan;
+package com.example.hanoicraftcorner.register;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -32,6 +32,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.hanoicraftcorner.R;
+import com.example.hanoicraftcorner.adapter.ImageAdapter;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -42,8 +43,6 @@ import java.util.Map;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import register.ImageAdapter;
 
 public class Register_Artisan extends AppCompatActivity {
     EditText username, stOrbr, email, phone, password, introduce;

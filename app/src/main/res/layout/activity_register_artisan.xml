@@ -6,7 +6,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="register_artisan.Register_Artisan">
+    tools:context=".register.Register_Artisan">
 
 
     <ImageButton
@@ -134,7 +134,7 @@
                 android:autofillHints="password"
                 android:background="@drawable/input_text_background"
                 android:hint="@string/inpPassText"
-                android:inputType="text"
+                android:inputType="textPassword"
                 android:paddingVertical="18dp"
                 android:paddingStart="16dp"
                 android:paddingEnd="32dp"
