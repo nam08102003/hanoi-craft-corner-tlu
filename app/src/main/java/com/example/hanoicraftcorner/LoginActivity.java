@@ -1,4 +1,4 @@
-package com.example.hanoicraft;
+package com.example.hanoicraftcorner;
 
 import android.content.Intent;
 import android.os.Bundle;
