@@ -33,6 +33,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.hanoicraftcorner.R;
 import com.example.hanoicraftcorner.adapter.ImageAdapter;
+import com.example.hanoicraftcorner.main.mainboard_artisan.MainBoardArtisan;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -243,6 +244,11 @@ public class Register_Artisan extends AppCompatActivity {
                                 } else {
                                     saveArtisanInfoWithImagesSubcollection(db.collection("Users").document(userId), storeOrBrand, phoneStr, introduceStr, new ArrayList<>());
                                 }
+                                // Chuyển sang MainBoardArtisan và truyền email
+                                Intent intent = new Intent(Register_Artisan.this, MainBoardArtisan.class);
+                                intent.putExtra("email", emailStr);
+                                startActivity(intent);
+                                finish();
                             })
                             .addOnFailureListener(e -> Toast.makeText(this, "Đăng ký thất bại!", Toast.LENGTH_SHORT).show());
                     } else {
@@ -303,12 +309,12 @@ public class Register_Artisan extends AppCompatActivity {
         documentReference.collection("artisanInfo")
             .add(artisanInfo)
             .addOnSuccessListener(subDocRef -> {
-                // Lưu từng ảnh vào subcollection Image (dạng base64 string)
+                // Lưu từng ảnh vào subcollection Image (dạng base64 string, trường viết thường)
                 if (!base64Images.isEmpty()) {
                     for (String base64 : base64Images) {
                         Map<String, Object> img = new HashMap<>();
                         img.put("base64", base64);
-                        subDocRef.collection("Image").add(img);
+                        subDocRef.collection("`image").add(img);
                     }
                 }
                 Toast.makeText(this, "Đăng ký thành công!", Toast.LENGTH_SHORT).show();

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="64dp"
+    android:height="64dp"
+    android:viewportWidth="64"
+    android:viewportHeight="64">
+    <!-- Outer circle: gray stroke, no fill -->
+    <path
+        android:fillColor="@android:color/transparent"
+        android:strokeColor="#8F959E"
+        android:strokeWidth="4"
+        android:pathData="M32,4a28,28 0 1,0 0,56a28,28 0 1,0 0,-56z"/>
+    <!-- Plus sign: same gray as circle stroke -->
+    <path
+        android:strokeColor="#8F959E"
+        android:strokeWidth="4"
+        android:strokeLineCap="round"
+        android:fillColor="@android:color/transparent"
+        android:pathData="M32,20 L32,44 M20,32 L44,32"/>
+</vector>
