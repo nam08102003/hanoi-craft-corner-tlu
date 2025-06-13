@@ -33,6 +33,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.hanoicraftcorner.R;
 import com.example.hanoicraftcorner.adapter.ImageAdapter;
+import com.example.hanoicraftcorner.main.mainboard_artisan.MainBoardArtisan;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -244,7 +245,7 @@ public class Register_Artisan extends AppCompatActivity {
                                     saveArtisanInfoWithImagesSubcollection(db.collection("Users").document(userId), storeOrBrand, phoneStr, introduceStr, new ArrayList<>());
                                 }
                                 // Chuyển sang MainBoardArtisan và truyền email
-                                Intent intent = new Intent(Register_Artisan.this, com.example.hanoicraftcorner.mainboard_artisan.MainBoardArtisan.class);
+                                Intent intent = new Intent(Register_Artisan.this, MainBoardArtisan.class);
                                 intent.putExtra("email", emailStr);
                                 startActivity(intent);
                                 finish();

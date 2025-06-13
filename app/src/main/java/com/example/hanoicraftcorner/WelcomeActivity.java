@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.view.View;
 import android.widget.Button;
 
+import com.example.hanoicraftcorner.login.LoginActivity;
+
 public class WelcomeActivity extends AppCompatActivity {
     Button startButton;
     @Override
