@@ -13,6 +13,10 @@
         android:theme="@style/Theme.HaNoiCraftCorner"
         tools:targetApi="31">
         <activity
+            android:name=".LoginActivity"
+            android:exported="false"
+            android:theme="@style/Theme.HaNoiCraftCorner" />
+        <activity
             android:name=".ResetPasswordSuccessActivity"
             android:exported="false" />
         <activity

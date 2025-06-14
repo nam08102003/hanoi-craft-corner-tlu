@@ -49,24 +49,24 @@ public class LoginActivity extends AppCompatActivity {
         String passwordText = password.getText().toString().trim();
 
         if (emailText.isEmpty() || passwordText.isEmpty()) {
-            Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Vui lòng nhập đầy đủ email và mật khẩu", Toast.LENGTH_SHORT).show();
             return;
         }
-        if( passwordText.length() < 6) {
-            Toast.makeText(this, "Password must be at least 6 characters", Toast.LENGTH_SHORT).show();
-            return;
-        }
+//        if( passwordText.length() < 6) {
+//            Toast.makeText(this, "Password must be at least 6 characters", Toast.LENGTH_SHORT).show();
+//            return;
+//        }
         auth.signInWithEmailAndPassword(emailText, passwordText)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             // Login successful
-                            Toast.makeText(LoginActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LoginActivity.this, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show();
 
                         } else {
                             // Login failed
-                            Toast.makeText(LoginActivity.this, "Login failed: " + task.isSuccessful(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LoginActivity.this, "Xảy ra lỗi!" + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     }
         });
