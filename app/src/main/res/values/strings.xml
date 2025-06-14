@@ -10,4 +10,32 @@
     <string name="reset_password_title">Đặt lại mật khẩu</string>
     <string name="get_otp">Vui lòng kiểm tra email của bạn để lấy mã xác thực.</string>
     <string name="reset_password_success">Đặt lại mật khẩu  thành công.</string>
+    <string name="btnString">Đăng ký</string>
+    <string name="backBtn">back</string>
+    <string name="Title">Chưa có tài khoản?\nĐăng ký ngay!</string>
+    <string name="hintInpUser">Tên đăng nhập</string>
+    <string name="inpPassText">Mật khẩu (ít nhất 6 ký tự)</string>
+    <string name="inpEmailText">Email</string>
+    <string name="ClickableText">Đăng nhập</string>
+    <string name="Title_register_artisan">Đăng ký tài khoản nghệ nhân</string>
+    <string name="hintInpStoreOrBrand">Tên thương hiệu/Cửa hàng</string>
+    <string name="hintInpPhone">Số điện thoại</string>
+    <string name="hintInpIntroduce">Giới thiệu</string>
+    <string name="hintInpUserArtisan">Tên người dùng</string>
+    <string name="contDesDeleteImage">Xóa ảnh</string>
+    <string name="contDesImageItem">Ảnh sản phẩm</string>
+    <string name="greeting">Xin chào!</string>
+    <string name="username">Tên người dùng</string>
+    <string name="verified">Đã xác thực</string>
+    <string name="my_products_count">Sản phẩm của tôi: 0</string>
+    <string name="add_product">Thêm sản phẩm</string>
+    <string name="manage_products">Quản lý sản phẩm</string>
+    <string name="new_message">Tin nhắn mới</string>
+    <string name="manage_store">Quản lý gian hàng</string>
+    <string name="featured_products">Sản phẩm nổi bật của tôi</string>
+    <string name="product_image_1">Ảnh sản phẩm 1</string>
+    <string name="product_image_2">Ảnh sản phẩm 2</string>
+    <string name="product_info">thông tin sản phẩm</string>
+    <string name="product_detail_1">Chi tiết sản phẩm 1</string>
+    <string name="product_detail_2">Chi tiết sản phẩm 2</string>
 </resources>
