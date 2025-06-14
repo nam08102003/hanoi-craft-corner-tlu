@@ -1,4 +1,4 @@
-package com.example.hanoicraft;
+package com.example.hanoicraftcorner;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -42,6 +42,15 @@ public class LoginActivity extends AppCompatActivity {
                 logInUser();
             }
         });
+
+        forgotPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(LoginActivity.this, ForgotPasswordActivity.class));
+            }
+        });
+
+
     }
 
     private void logInUser() {
@@ -66,12 +75,13 @@ public class LoginActivity extends AppCompatActivity {
 
                         } else {
                             // Login failed
-                            Toast.makeText(LoginActivity.this, "Login failed: " + task.isSuccessful(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LoginActivity.this, "Login failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     }
         });
 
     }
+
 
 }
 
