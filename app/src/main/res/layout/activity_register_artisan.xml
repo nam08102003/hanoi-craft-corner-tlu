@@ -6,7 +6,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".register.Register_Artisan">
+    tools:context=".main.register.RegisterArtisan">
 
 
     <ImageButton
@@ -58,7 +58,8 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="35dp"
                 android:autofillHints="password"
-                android:background="@drawable/input_text_background"
+                android:background="@drawable/edittext_background"
+                android:elevation="3dp"
                 android:hint="@string/hintInpUserArtisan"
                 android:inputType="text"
                 android:paddingVertical="18dp"
@@ -76,7 +77,8 @@
                 android:layout_marginTop="24dp"
                 android:layout_marginEnd="35dp"
                 android:autofillHints="username"
-                android:background="@drawable/input_text_background"
+                android:background="@drawable/edittext_background"
+                android:elevation="3dp"
                 android:hint="@string/hintInpStoreOrBrand"
                 android:inputType="text"
                 android:paddingVertical="18dp"
@@ -94,7 +96,8 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="35dp"
                 android:autofillHints="emailAddress"
-                android:background="@drawable/input_text_background"
+                android:background="@drawable/edittext_background"
+                android:elevation="3dp"
                 android:hint="@string/inpEmailText"
                 android:inputType="text"
                 android:paddingVertical="18dp"
@@ -113,7 +116,8 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="35dp"
                 android:autofillHints="emailAddress"
-                android:background="@drawable/input_text_background"
+                android:background="@drawable/edittext_background"
+                android:elevation="3dp"
                 android:hint="@string/hintInpPhone"
                 android:inputType="phone"
                 android:paddingVertical="18dp"
@@ -132,7 +136,8 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="35dp"
                 android:autofillHints="password"
-                android:background="@drawable/input_text_background"
+                android:background="@drawable/edittext_background"
+                android:elevation="3dp"
                 android:hint="@string/inpPassText"
                 android:inputType="textPassword"
                 android:paddingVertical="18dp"
@@ -151,7 +156,8 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="35dp"
                 android:autofillHints="password"
-                android:background="@drawable/input_text_background"
+                android:background="@drawable/edittext_background"
+                android:elevation="3dp"
                 android:hint="@string/hintInpIntroduce"
                 android:inputType="textMultiLine"
                 android:minLines="5"
@@ -163,53 +169,82 @@
                 android:textColor="@color/black"
                 android:textSize="12sp" />
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="35dp"
+                android:layout_marginEnd="35dp"
+                android:layout_marginBottom="35dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:id="@+id/addPic"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="1dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="3dp"
+                    android:background="@drawable/input_picture_register_artisan"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="center_horizontal|center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="20dp">
+
+                    <ImageView
+                        android:id="@+id/imageView"
+                        android:layout_width="66dp"
+                        android:layout_height="46dp"
+                        android:contentDescription="@string/desc_register_artisan_image"
+                        app:srcCompat="@drawable/ic_register_artisan_plus" />
+
+                    <TextView
+                        android:id="@+id/textView2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/add_image" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/textView3"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:layout_weight="1"
+                    android:text="@string/provide_certificate_image"
+                    android:textColor="@color/light_pink" />
+            </LinearLayout>
+
         </LinearLayout>
     </ScrollView>
-
-    <LinearLayout
-        android:id="@+id/addPic"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="1dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="3dp"
-        android:background="@drawable/input_picture_register_artisan"
-        android:clickable="true"
-        android:focusable="true"
-        android:gravity="center_horizontal|center_vertical"
-        android:orientation="horizontal"
-        android:padding="20dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.12"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/scrollView2">
-
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="66dp"
-            android:layout_height="46dp"
-            app:srcCompat="@drawable/ic_register_artisan_plus" />
-
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Thêm ảnh" />
-
-    </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/imageRecyclerView"
         android:layout_width="0dp"
-        android:layout_height="80dp"
-        android:layout_marginTop="12dp"
+        android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addPic" />
+        app:layout_constraintTop_toBottomOf="@+id/scrollView2" />
+
+    <TextView
+        android:id="@+id/imageErrorText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:textColor="@color/red"
+        android:textSize="13sp"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/imageRecyclerView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
     <Button
         android:id="@+id/registerButtonArtisan"
@@ -240,7 +275,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Đã có tài khoản? " />
+            android:text="@string/already_have_account" />
 
         <TextView
             android:id="@+id/ClickableText"
@@ -252,18 +287,6 @@
             android:textColor="@color/primary"
             android:textSize="14sp" />
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="193dp"
-        android:layout_height="63dp"
-        android:layout_marginTop="16dp"
-        android:text="*Vui lòng cung cấp đầy đủ ảnh chứng chỉ, ảnh CCCD(mặt trước và mặt sau)"
-        android:textColor="@color/light_pink"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.2"
-        app:layout_constraintStart_toEndOf="@+id/addPic"
-        app:layout_constraintTop_toBottomOf="@+id/scrollView2" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

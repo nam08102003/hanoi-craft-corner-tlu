@@ -1,8 +1,9 @@
-package com.example.hanoicraftcorner.register;
+package com.example.hanoicraftcorner.main.register;
 
 
 import static android.content.ContentValues.TAG;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
@@ -18,6 +19,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.hanoicraftcorner.R;
+import com.example.hanoicraftcorner.main.login.LoginActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -52,9 +54,7 @@ public class Register extends AppCompatActivity {
         registerButton = findViewById(R.id.registerButton);
         ClickToLogin = findViewById(R.id.ClickableText);
 
-        backButton.setOnClickListener(v -> {
-//            Update the code to handle back navigation
-        });
+        backButton.setOnClickListener(v -> onBackPressed());
         registerButton.setOnClickListener(v -> {
             String username = usernameEditText.getText().toString();
             String email = emailEditText.getText().toString();
@@ -92,37 +92,47 @@ public class Register extends AppCompatActivity {
                                 Map<String, Object> userMap = new HashMap<>();
                                 userMap.put("username", username);
                                 userMap.put("email", email);
-                                userMap.put("ProfileType", "user");
+                                userMap.put("profiletype", "user");
 
-                                db.collection("users").document(userId)
+                                db.collection("Users").document(userId)
                                         .set(userMap)
                                         .addOnCompleteListener(dbTask -> {
                                             if (dbTask.isSuccessful()) {
-                                                runOnUiThread(() -> Toast.makeText(this, "Registration successful.",
-                                                        Toast.LENGTH_SHORT).show());
+                                                runOnUiThread(() -> {
+                                                    Toast.makeText(this, "Registration successful.", Toast.LENGTH_SHORT).show();
+                                                    Intent intent = new Intent(this, com.example.hanoicraftcorner.main.MainActivity.class);
+                                                    intent.putExtra("email", email);
+                                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                                    startActivity(intent);
+                                                });
                                             } else {
                                                 Log.w(TAG, "createUserWithEmail:failure", dbTask.getException());
                                             }
                                         });
                             }
-                            } else {
-                                Exception exception = authTask.getException();
-                                String errorMessage;
-                                if (exception != null) {
-                                    String msg = exception.getMessage();
-                                    Log.w(TAG, "createUserWithEmail:failure", exception);
-                                    if (msg != null && msg.contains("email address is already in use")) {
-                                        runOnUiThread(() -> emailEditText.setError("Email đã được sử dụng"));
-                                        return;
-                                    } else {
-                                        errorMessage = msg;
-                                    }
+                        } else {
+                            Exception exception = authTask.getException();
+                            String errorMessage;
+                            if (exception != null) {
+                                String msg = exception.getMessage();
+                                Log.w(TAG, "createUserWithEmail:failure", exception);
+                                if (msg != null && msg.contains("email address is already in use")) {
+                                    runOnUiThread(() -> emailEditText.setError("Email đã được sử dụng"));
+                                    return;
                                 } else {
-                                    errorMessage = "Registration failed. Please try again.";
+                                    errorMessage = msg;
                                 }
-                                runOnUiThread(() -> Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show());
+                            } else {
+                                errorMessage = "Registration failed. Please try again.";
                             }
-            });
+                            runOnUiThread(() -> Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show());
+                        }
+                    });
+        });
+        ClickToLogin.setOnClickListener(v -> {
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+            finish();
         });
     }
     }

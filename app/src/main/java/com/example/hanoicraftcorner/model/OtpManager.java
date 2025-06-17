@@ -1,4 +1,4 @@
-package com.example.hanoicraftcorner.Model;
+package com.example.hanoicraftcorner.model;
 
 import java.util.Random;
 

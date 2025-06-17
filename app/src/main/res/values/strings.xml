@@ -38,4 +38,16 @@
     <string name="product_info">thông tin sản phẩm</string>
     <string name="product_detail_1">Chi tiết sản phẩm 1</string>
     <string name="product_detail_2">Chi tiết sản phẩm 2</string>
+    <string name="login_welcome">Xin chào! \nĐăng nhập để bắt đầu</string>
+    <string name="login_email_hint">Email</string>
+    <string name="login_password_hint">Mật khẩu</string>
+    <string name="login_button">Đăng nhập</string>
+    <string name="no_account">Không có tài khoản?</string>
+    <string name="sign_up_now">Đăng ký ngay</string>
+    <string name="forgot_password">Quên mật khẩu?</string>
+    <string name="register_artisan">Đăng ký tài khoản nghệ nhân</string>
+    <string name="add_image">Thêm ảnh</string>
+    <string name="provide_certificate_image">*Vui lòng cung cấp đầy đủ ảnh chứng chỉ, ảnh CCCD(mặt trước và mặt sau)</string>
+    <string name="already_have_account">Đã có tài khoản? </string>
+    <string name="desc_register_artisan_image">Thêm ảnh nghệ nhân</string>
 </resources>

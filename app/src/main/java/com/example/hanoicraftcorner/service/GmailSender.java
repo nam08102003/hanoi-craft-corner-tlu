@@ -1,4 +1,4 @@
-package com.example.hanoicraftcorner.Service;
+package com.example.hanoicraftcorner.service;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Properties;

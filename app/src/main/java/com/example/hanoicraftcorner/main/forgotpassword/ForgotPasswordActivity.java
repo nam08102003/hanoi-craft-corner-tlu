@@ -1,4 +1,4 @@
-package com.example.hanoicraftcorner.forgotpassword;
+package com.example.hanoicraftcorner.main.forgotpassword;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,9 +12,9 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.hanoicraftcorner.BuildConfig;
-import com.example.hanoicraftcorner.Model.OtpManager;
+import com.example.hanoicraftcorner.model.OtpManager;
 import com.example.hanoicraftcorner.R;
-import com.example.hanoicraftcorner.Service.GmailSender;
+import com.example.hanoicraftcorner.service.GmailSender;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.SignInMethodQueryResult;
 

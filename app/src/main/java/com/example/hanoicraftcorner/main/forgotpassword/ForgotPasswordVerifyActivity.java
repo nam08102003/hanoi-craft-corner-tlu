@@ -1,11 +1,10 @@
-package com.example.hanoicraftcorner.forgotpassword;
+package com.example.hanoicraftcorner.main.forgotpassword;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,7 +13,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.hanoicraftcorner.R;
-import com.example.hanoicraftcorner.resetpassword.ResetPasswordActivity;
+import com.example.hanoicraftcorner.main.resetpassword.ResetPasswordActivity;
 
 public class ForgotPasswordVerifyActivity extends AppCompatActivity {
 

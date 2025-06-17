@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="register.Register" >
+    tools:context=".main.register.Register" >
 
 
     <ImageButton
@@ -44,7 +44,7 @@
         android:layout_marginTop="52dp"
         android:layout_marginEnd="35dp"
         android:autofillHints="username"
-        android:background="@drawable/input_text_background"
+        android:background="@drawable/edittext_background"
         android:hint="@string/hintInpUser"
         android:inputType="text"
         android:paddingVertical="18dp"
@@ -65,7 +65,7 @@
         android:layout_marginStart="35dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="35dp"
-        android:background="@drawable/input_text_background"
+        android:background="@drawable/edittext_background"
         android:hint="@string/inpEmailText"
         android:autofillHints="emailAddress"
         android:inputType="text"
@@ -88,7 +88,7 @@
         android:layout_marginStart="35dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="35dp"
-        android:background="@drawable/input_text_background"
+        android:background="@drawable/edittext_background"
         android:hint="@string/inpPassText"
         android:inputType="textPassword"
         android:autofillHints="password"
