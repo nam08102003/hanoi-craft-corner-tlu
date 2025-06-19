@@ -50,4 +50,9 @@
     <string name="provide_certificate_image">*Vui lòng cung cấp đầy đủ ảnh chứng chỉ, ảnh CCCD(mặt trước và mặt sau)</string>
     <string name="already_have_account">Đã có tài khoản? </string>
     <string name="desc_register_artisan_image">Thêm ảnh nghệ nhân</string>
+    <string name="text_success_pending_admin">Yêu cầu của bạn đang được duyệt bởi Admin</string>
+    <string name="ok">OK</string>
+    <string name="error_image_required">Bạn phải chọn đủ 3 ảnh: chứng chỉ, CCCD trước, CCCD sau</string>
+    <string name="verified_text">Đã xác thực</string>
+    <string name="pending_verification_text">Chờ xác thực</string>
 </resources>

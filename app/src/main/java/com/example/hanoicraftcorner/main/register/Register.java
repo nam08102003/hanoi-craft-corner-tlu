@@ -54,7 +54,7 @@ public class Register extends AppCompatActivity {
         registerButton = findViewById(R.id.registerButton);
         ClickToLogin = findViewById(R.id.ClickableText);
 
-        backButton.setOnClickListener(v -> onBackPressed());
+        backButton.setOnClickListener(v -> getOnBackPressedDispatcher().onBackPressed());
         registerButton.setOnClickListener(v -> {
             String username = usernameEditText.getText().toString();
             String email = emailEditText.getText().toString();
@@ -62,23 +62,28 @@ public class Register extends AppCompatActivity {
 
             if (username.isEmpty()){
                 usernameEditText.setError("Không được để trống tên người dùng");
+                usernameEditText.requestFocus();
                 return;
             }
             if (email.isEmpty()){
                 emailEditText.setError("Không được để trống email");
+                emailEditText.requestFocus();
                 return;
             }
             if (!email.contains("@") || !email.contains(".")) {
                 emailEditText.setError("Email không hợp lệ");
+                emailEditText.requestFocus();
                 return;
             }
 
             if (password.isEmpty()){
                 passwordEditText.setError("Không được để trống mật khẩu");
+                passwordEditText.requestFocus();
                 return;
             }
             if (password.length() < 6) {
                 passwordEditText.setError("Mật khẩu phải có ít nhất 6 ký tự");
+                passwordEditText.requestFocus();
                 return;
             }
             FirebaseAuth.getInstance()
@@ -90,11 +95,11 @@ public class Register extends AppCompatActivity {
                                 String userId = user.getUid();
                                 FirebaseFirestore db = FirebaseFirestore.getInstance();
                                 Map<String, Object> userMap = new HashMap<>();
-                                userMap.put("username", username);
-                                userMap.put("email", email);
-                                userMap.put("profiletype", "user");
+                                userMap.put("Username", username);
+                                userMap.put("Email", email);
+                                userMap.put("Profiletype", "user");
 
-                                db.collection("Users").document(userId)
+                                db.collection("users").document(userId)
                                         .set(userMap)
                                         .addOnCompleteListener(dbTask -> {
                                             if (dbTask.isSuccessful()) {

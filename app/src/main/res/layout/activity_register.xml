@@ -45,6 +45,7 @@
         android:layout_marginEnd="35dp"
         android:autofillHints="username"
         android:background="@drawable/edittext_background"
+        android:elevation="8dp"
         android:hint="@string/hintInpUser"
         android:inputType="text"
         android:paddingVertical="18dp"
@@ -65,9 +66,10 @@
         android:layout_marginStart="35dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="35dp"
-        android:background="@drawable/edittext_background"
-        android:hint="@string/inpEmailText"
         android:autofillHints="emailAddress"
+        android:background="@drawable/edittext_background"
+        android:elevation="8dp"
+        android:hint="@string/inpEmailText"
         android:inputType="text"
         android:paddingVertical="18dp"
         android:paddingStart="16dp"
@@ -88,10 +90,11 @@
         android:layout_marginStart="35dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="35dp"
+        android:autofillHints="password"
         android:background="@drawable/edittext_background"
+        android:elevation="8dp"
         android:hint="@string/inpPassText"
         android:inputType="textPassword"
-        android:autofillHints="password"
         android:paddingVertical="18dp"
         android:paddingStart="16dp"
         android:paddingEnd="32dp"
@@ -133,7 +136,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Đã có tài khoản? " />
+            android:text="@string/already_have_account" />
 
         <TextView
             android:id="@+id/ClickableText"

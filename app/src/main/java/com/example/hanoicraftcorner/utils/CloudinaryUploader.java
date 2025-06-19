@@ -7,6 +7,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -64,6 +65,52 @@ public class CloudinaryUploader {
                 }
             }
         });
+    }
+
+    public static void uploadImage(InputStream inputStream, String fileName, UploadCallback callback) {
+        try {
+            byte[] bytes = new byte[inputStream.available()];
+            int read = inputStream.read(bytes);
+            if (read <= 0) throw new IOException("No data read from InputStream");
+            RequestBody requestBody = new MultipartBody.Builder()
+                    .setType(MultipartBody.FORM)
+                    .addFormDataPart("file", fileName,
+                            RequestBody.create(bytes, MediaType.parse("image/*")))
+                    .addFormDataPart("upload_preset", "HnCraftCorner")
+                    .build();
+
+            Request request = new Request.Builder()
+                    .url("https://api.cloudinary.com/v1_1/dcrohfxnw/image/upload")
+                    .post(requestBody)
+                    .build();
+
+            client.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                    Log.e(TAG, "Upload failed", e);
+                    if (callback != null) callback.onFailure(e);
+                }
+
+                @Override
+                public void onResponse(@NotNull Call call, @NotNull Response response) {
+                    try {
+                        if (!response.isSuccessful()) {
+                            String errorBody = response.body() != null ? response.body().string() : null;
+                            Log.e(TAG, "Upload failed: " + response + ", body: " + errorBody);
+                            if (callback != null) callback.onFailure(new Exception("Upload failed: " + response + ", body: " + errorBody));
+                            return;
+                        }
+                        String responseBody = response.body() != null ? response.body().string() : null;
+                        String imageUrl = responseBody != null ? parseImageUrl(responseBody) : null;
+                        if (callback != null) callback.onSuccess(imageUrl);
+                    } catch (Exception e) {
+                        if (callback != null) callback.onFailure(e);
+                    }
+                }
+            });
+        } catch (Exception e) {
+            if (callback != null) callback.onFailure(e);
+        }
     }
 
     // Simple JSON parsing to extract the 'secure_url' field

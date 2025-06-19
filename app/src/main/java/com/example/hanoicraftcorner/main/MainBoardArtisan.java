@@ -40,6 +40,24 @@ public class MainBoardArtisan extends AppCompatActivity {
                     if (tv != null && username != null) {
                         tv.setText(username);
                     }
+                    String status = userDoc.getString("Status");
+                    android.widget.TextView textVerified = findViewById(R.id.text_verified);
+                    View dotView = ((android.view.ViewGroup)textVerified.getParent()).findViewById(android.R.id.custom);
+                    if (dotView == null) {
+                        // dotView là View kế tiếp trong LinearLayout
+                        android.view.ViewGroup parent = (android.view.ViewGroup) textVerified.getParent();
+                        int idx = parent.indexOfChild(textVerified);
+                        if (idx != -1 && idx + 1 < parent.getChildCount()) {
+                            dotView = parent.getChildAt(idx + 1);
+                        }
+                    }
+                    if (status != null && status.equalsIgnoreCase("Verified")) {
+                        textVerified.setText(R.string.verified_text);
+                        if (dotView != null) dotView.setBackgroundResource(R.drawable.green_dot_circle);
+                    } else {
+                        textVerified.setText(R.string.pending_verification_text);
+                        if (dotView != null) dotView.setBackgroundResource(R.drawable.yellow_dot_circle);
+                    }
                 }
             });
 
