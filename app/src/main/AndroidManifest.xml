@@ -20,7 +20,9 @@
         android:theme="@style/Theme.HaNoiCraftCorner"
         tools:targetApi="31" >
         <activity
-            android:name=".mainboard_artisan.MainBoardArtisan"
+
+            android:name=".main.mainboard_user.MainboardUser"
+
             android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

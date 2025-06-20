@@ -38,4 +38,6 @@
     <string name="product_info">thông tin sản phẩm</string>
     <string name="product_detail_1">Chi tiết sản phẩm 1</string>
     <string name="product_detail_2">Chi tiết sản phẩm 2</string>
+    <string name="remove_button_desc">Remove item</string>
+
 </resources>
