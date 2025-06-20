@@ -53,6 +53,20 @@
     <string name="text_success_pending_admin">Yêu cầu của bạn đang được duyệt bởi Admin</string>
     <string name="ok">OK</string>
     <string name="error_image_required">Bạn phải chọn đủ 3 ảnh: chứng chỉ, CCCD trước, CCCD sau</string>
+    <string name="product_count">Số sản phẩm: %1$d</string>
     <string name="verified_text">Đã xác thực</string>
     <string name="pending_verification_text">Chờ xác thực</string>
+    <string name="no_products">Bạn chưa có sản phẩm</string>
+    <string name="cover_image_desc">Ảnh bìa</string>
+    <string name="avatar_image_desc">Ảnh đại diện</string>
+    <string name="username_label">Tên người dùng</string>
+    <string name="phone_label">Số điện thoại</string>
+    <string name="email_label">Email</string>
+    <string name="store_name_label">Tên cửa hàng</string>
+    <string name="introduce_label">Giới thiệu về cửa hàng hoặc nghệ nhân</string>
+    <string name="save">Lưu</string>
+    <string name="back">Quay lại</string>
+    <string name="edit">Chỉnh sửa</string>
+    <string name="change">Thay đổi</string>
+    <string name="cover_hint">Ấn vào đây để thay đổi ảnh bìa</string>
 </resources>

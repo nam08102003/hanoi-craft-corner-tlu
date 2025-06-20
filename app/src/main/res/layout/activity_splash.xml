@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="#9775FA">
 
-    <com.example.hanoicraftcorner.main.opening.TypeWriterTextView
+    <com.example.hanoicraftcorner.service.TypeWriterTextView
         android:id="@+id/splashText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

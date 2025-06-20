@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 
 import com.example.hanoicraftcorner.R;
+import com.example.hanoicraftcorner.service.TypeWriterTextView;
 
 @SuppressLint("CustomSplashScreen")
 public class SplashActivity extends AppCompatActivity {

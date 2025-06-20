@@ -1,4 +1,4 @@
-package com.example.hanoicraftcorner.main.register;
+package com.example.hanoicraftcorner.main.opening.register;
 
 
 import static android.content.ContentValues.TAG;
@@ -19,7 +19,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.hanoicraftcorner.R;
-import com.example.hanoicraftcorner.main.login.LoginActivity;
+import com.example.hanoicraftcorner.main.opening.login.LoginActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -105,9 +105,8 @@ public class Register extends AppCompatActivity {
                                             if (dbTask.isSuccessful()) {
                                                 runOnUiThread(() -> {
                                                     Toast.makeText(this, "Registration successful.", Toast.LENGTH_SHORT).show();
-                                                    Intent intent = new Intent(this, com.example.hanoicraftcorner.main.MainActivity.class);
+                                                    Intent intent = new Intent(this, LoginActivity.class);
                                                     intent.putExtra("email", email);
-                                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                                     startActivity(intent);
                                                 });
                                             } else {

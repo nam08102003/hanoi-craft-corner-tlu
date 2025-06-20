@@ -6,7 +6,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/white"
 
-    tools:context=".main.login.LoginActivity">
+    tools:context=".main.opening.login.LoginActivity">
 
     <TextView
         android:id="@+id/reg_img"

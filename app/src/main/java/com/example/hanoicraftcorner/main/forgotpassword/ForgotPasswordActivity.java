@@ -33,6 +33,9 @@ public class ForgotPasswordActivity extends AppCompatActivity {
 
         Button btnContinue = findViewById(R.id.btn_continue);
         EditText editEmail = findViewById(R.id.edit_email);
+        Button btnBack = findViewById(R.id.btn_back);
+
+        btnBack.setOnClickListener(v -> getOnBackPressedDispatcher().onBackPressed());
 
         btnContinue.setOnClickListener(v -> {
             String email = editEmail.getText().toString().trim();

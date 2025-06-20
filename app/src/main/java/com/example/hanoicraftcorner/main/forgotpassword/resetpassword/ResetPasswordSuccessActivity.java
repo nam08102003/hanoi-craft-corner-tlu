@@ -1,4 +1,4 @@
-package com.example.hanoicraftcorner.main.resetpassword;
+package com.example.hanoicraftcorner.main.forgotpassword.resetpassword;
 
 import android.content.Intent;
 import android.os.Bundle;

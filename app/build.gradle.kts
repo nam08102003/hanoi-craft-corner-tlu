@@ -59,6 +59,7 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
+    androidTestImplementation(libs.rules)
 
 //    Firebase
     implementation(platform(libs.firebase.bom.v33150))
@@ -72,4 +73,6 @@ dependencies {
     implementation(libs.firebase.analytics)
 
     implementation(libs.okhttp)
+    implementation(libs.glide)
+    annotationProcessor(libs.compiler)
 }

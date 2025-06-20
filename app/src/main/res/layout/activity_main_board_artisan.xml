@@ -5,30 +5,88 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".main.MainBoardArtisan">
+    tools:context=".main.artisan.MainBoardArtisan">
 
     <FrameLayout
         android:id="@+id/frame_home"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone" />
+        android:background="@color/skinColor"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <FrameLayout
         android:id="@+id/frame_heart"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone" />
+        android:background="@color/skinColor"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/text_my_products_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:layout_marginBottom="16dp"
+                android:gravity="center"
+                android:text="SẢN PHẨM CỦA TÔI"
+                android:textColor="@color/primary"
+                android:textSize="28sp"
+                android:textStyle="bold"
+                tools:ignore="HardcodedText" />
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:fillViewport="true">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal|top"
+                    android:orientation="vertical"
+                    android:paddingLeft="24dp"
+                    android:paddingTop="0dp"
+                    android:paddingRight="24dp">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recycler_my_products"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:clipToPadding="false"
+                        android:paddingBottom="16dp"
+                        android:scrollbars="vertical" />
+                </LinearLayout>
+            </ScrollView>
+        </LinearLayout>
+    </FrameLayout>
 
     <FrameLayout
         android:id="@+id/frame_wallet"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone" />
+        android:background="@color/skinColor"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <FrameLayout
         android:id="@+id/frame_menu"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="match_parent"
+        android:background="@color/skinColor"
         android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -54,6 +112,7 @@
                 android:textSize="20sp" />
 
             <LinearLayout
+                android:id="@+id/artisan_info"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
@@ -284,6 +343,7 @@
 
             <!-- 2 dòng sản phẩm nổi bật -->
             <LinearLayout
+                android:id="@+id/linear_featured_1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
@@ -314,6 +374,7 @@
                         android:textStyle="bold" />
 
                     <TextView
+                        android:id="@+id/image_product_detail_1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/product_detail_1"
@@ -323,6 +384,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/linear_featured_2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
@@ -353,6 +415,7 @@
                         android:textStyle="bold" />
 
                     <TextView
+                        android:id="@+id/image_product_detail_2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/product_detail_2"
@@ -360,14 +423,24 @@
                         android:textSize="14sp" />
                 </LinearLayout>
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/text_no_products"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:gravity="center"
+                android:text="@string/no_products"
+                android:textColor="#FF9800"
+                android:textSize="16sp"
+                android:visibility="gone" />
         </LinearLayout>
     </FrameLayout>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
         android:layout_width="0dp"
-        android:layout_height="80dp"
-        android:layout_marginBottom="4dp"
+        android:layout_height="wrap_content"
         android:elevation="8dp"
         app:itemIconTint="@color/bottom_nav_icon_color"
         app:labelVisibilityMode="unlabeled"

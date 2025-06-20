@@ -1,4 +1,4 @@
-package com.example.hanoicraftcorner.main.opening;
+package com.example.hanoicraftcorner.service;
 
 import android.content.Context;
 import android.os.Handler;

@@ -20,45 +20,38 @@
         android:theme="@style/Theme.HaNoiCraftCorner"
         tools:targetApi="31">
         <activity
-            android:name=".main.MainBoardArtisan"
-            android:exported="true">
-
-        </activity>
-
+            android:name=".main.artisan.ArtisanInfo"
+            android:exported="false" />
         <activity
-            android:name=".main.resetpassword.ResetPasswordSuccessActivity"
+            android:name=".main.artisan.AddProduct"
+            android:exported="false" />
+        <activity
+            android:name=".main.artisan.MainBoardArtisan"
             android:exported="true" />
         <activity
-            android:name=".main.resetpassword.ResetPasswordActivity"
+            android:name=".main.forgotpassword.resetpassword.ResetPasswordSuccessActivity"
+            android:exported="true" />
+        <activity
+            android:name=".main.forgotpassword.resetpassword.ResetPasswordActivity"
             android:exported="true" />
         <activity
             android:name=".main.forgotpassword.ForgotPasswordVerifyActivity"
             android:exported="true" />
         <activity
             android:name=".main.forgotpassword.ForgotPasswordActivity"
-            android:exported="true">
-
-        </activity>
+            android:exported="true" />
         <activity
-            android:name=".main.register.RegisterArtisan"
-            android:exported="true">
-
-        </activity>
+            android:name=".main.opening.register.RegisterArtisan"
+            android:exported="true" />
         <activity
             android:name=".main.MainActivity"
-            android:exported="true">
-
-        </activity>
+            android:exported="true" />
         <activity
-            android:name=".main.register.Register"
-            android:exported="true">
-
-        </activity>
+            android:name=".main.opening.register.Register"
+            android:exported="true" />
         <activity
-            android:name=".main.login.LoginActivity"
-            android:exported="true">
-
-        </activity>
+            android:name=".main.opening.login.LoginActivity"
+            android:exported="true" />
         <activity
             android:name=".main.opening.WelcomeActivity"
             android:exported="true" />
@@ -67,9 +60,20 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.example.hanoicraftcorner.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
     </application>
 
 </manifest>

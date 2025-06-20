@@ -1,4 +1,4 @@
-package com.example.hanoicraftcorner.main.login;
+package com.example.hanoicraftcorner.main.opening.login;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,9 +9,10 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.hanoicraftcorner.R;
+import com.example.hanoicraftcorner.main.artisan.MainBoardArtisan;
 import com.example.hanoicraftcorner.main.forgotpassword.ForgotPasswordActivity;
-import com.example.hanoicraftcorner.main.register.Register;
-import com.example.hanoicraftcorner.main.register.RegisterArtisan;
+import com.example.hanoicraftcorner.main.opening.register.Register;
+import com.example.hanoicraftcorner.main.opening.register.RegisterArtisan;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class LoginActivity extends AppCompatActivity {
@@ -33,15 +34,19 @@ public class LoginActivity extends AppCompatActivity {
         forgotPassword = findViewById(R.id.forgot_password);
         auth = FirebaseAuth.getInstance();
 
+        // Prefill email if available from Intent extra
+        String prefillEmail = getIntent().getStringExtra("email");
+        if (prefillEmail != null) {
+            email.setText(prefillEmail);
+        }
+
         logIn.setOnClickListener(v -> logInUser());
         regisArtisan.setOnClickListener(v -> {
             Intent intent = new Intent(LoginActivity.this, RegisterArtisan.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
         });
         signUp.setOnClickListener(v -> {
             Intent intent = new Intent(LoginActivity.this, Register.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
         });
         forgotPassword.setOnClickListener(v -> {
@@ -89,7 +94,7 @@ public class LoginActivity extends AppCompatActivity {
                                         if (profileType == null) profileType = "user";
                                         Intent intent;
                                         if ("Seller".equals(profileType)) {
-                                            intent = new Intent(LoginActivity.this, com.example.hanoicraftcorner.main.MainBoardArtisan.class);
+                                            intent = new Intent(LoginActivity.this, MainBoardArtisan.class);
                                             intent.putExtra("email", emailText);
                                         } else {
                                             intent = new Intent(LoginActivity.this, com.example.hanoicraftcorner.main.MainActivity.class);
@@ -114,12 +119,12 @@ public class LoginActivity extends AppCompatActivity {
                                     .setTitle("Tài khoản không tồn tại")
                                     .setMessage("Bạn chưa có tài khoản? Đăng ký người dùng hoặc đăng ký nghệ nhân để tiếp tục.")
                                     .setPositiveButton("Đăng ký người dùng", (dialog, which) -> {
-                                        Intent registerIntent = new Intent(LoginActivity.this, com.example.hanoicraftcorner.main.register.Register.class);
+                                        Intent registerIntent = new Intent(LoginActivity.this, Register.class);
                                         registerIntent.putExtra("email", email.getText().toString());
                                         startActivity(registerIntent);
                                     })
                                     .setNegativeButton("Đăng ký nghệ nhân", (dialog, which) -> {
-                                        Intent artisanRegisterIntent = new Intent(LoginActivity.this, com.example.hanoicraftcorner.main.register.RegisterArtisan.class);
+                                        Intent artisanRegisterIntent = new Intent(LoginActivity.this, RegisterArtisan.class);
                                         artisanRegisterIntent.putExtra("email", email.getText().toString());
                                         startActivity(artisanRegisterIntent);
                                     })
