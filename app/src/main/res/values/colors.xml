@@ -12,4 +12,6 @@
     <color name="btnColorPurple">#9775FA</color>
     <color name="skinColor">#FDF6F2</color>
     <color name="light_pink">#BF57FB</color>
+    <color name="cyan">#55A1A9</color>
+    <color name="light_blue">#4382FF</color>
 </resources>

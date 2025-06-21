@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="register.Register" >
+    tools:context=".main.opening.register.Register" >
 
 
     <ImageButton
@@ -44,7 +44,8 @@
         android:layout_marginTop="52dp"
         android:layout_marginEnd="35dp"
         android:autofillHints="username"
-        android:background="@drawable/input_text_background"
+        android:background="@drawable/edittext_background"
+        android:elevation="8dp"
         android:hint="@string/hintInpUser"
         android:inputType="text"
         android:paddingVertical="18dp"
@@ -56,7 +57,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/Tittle" />
+        app:layout_constraintTop_toBottomOf="@+id/Tittle"
+        tools:ignore="TextContrastCheck" />
 
     <EditText
         android:id="@+id/inpEmail"
@@ -65,9 +67,10 @@
         android:layout_marginStart="35dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="35dp"
-        android:background="@drawable/input_text_background"
-        android:hint="@string/inpEmailText"
         android:autofillHints="emailAddress"
+        android:background="@drawable/edittext_background"
+        android:elevation="8dp"
+        android:hint="@string/inpEmailText"
         android:inputType="text"
         android:paddingVertical="18dp"
         android:paddingStart="16dp"
@@ -79,7 +82,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/inpUsername"
-        tools:ignore="TextFields" />
+        tools:ignore="TextFields,TextContrastCheck" />
 
     <EditText
         android:id="@+id/inpPassword"
@@ -88,10 +91,11 @@
         android:layout_marginStart="35dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="35dp"
-        android:background="@drawable/input_text_background"
+        android:autofillHints="password"
+        android:background="@drawable/edittext_background"
+        android:elevation="8dp"
         android:hint="@string/inpPassText"
         android:inputType="textPassword"
-        android:autofillHints="password"
         android:paddingVertical="18dp"
         android:paddingStart="16dp"
         android:paddingEnd="32dp"
@@ -102,7 +106,7 @@
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/inpEmail"
-        tools:ignore="TextFields" />
+        tools:ignore="TextFields,TextContrastCheck" />
 
 
     <Button
@@ -117,7 +121,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/inpPassword" />
+        app:layout_constraintTop_toBottomOf="@+id/inpPassword"
+        tools:ignore="TextContrastCheck" />
 
     <LinearLayout
         android:layout_width="0dp"
@@ -133,7 +138,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Đã có tài khoản? " />
+            android:text="@string/already_have_account" />
 
         <TextView
             android:id="@+id/ClickableText"
@@ -143,6 +148,7 @@
             android:focusable="true"
             android:text="@string/ClickableText"
             android:textColor="@color/primary"
-            android:textSize="14sp" />
+            android:textSize="14sp"
+            tools:ignore="TouchTargetSizeCheck" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
