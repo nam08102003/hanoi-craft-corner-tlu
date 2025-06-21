@@ -11,17 +11,8 @@
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:scaleType="centerCrop"
-        android:contentDescription="@string/contDesImageItem"/>
-
-    <TextView
-        android:id="@+id/image_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text=""
-        android:textSize="12sp"
-        android:textColor="@color/black"
-        android:layout_marginTop="2dp"
-        android:gravity="center"/>
+        android:contentDescription="@string/contDesImageItem"
+        android:background="@drawable/input_text_background"/>
 
     <ImageButton
         android:id="@+id/delete_image_btn"
@@ -31,3 +22,4 @@
         android:background="@android:color/transparent"
         android:contentDescription="@string/contDesDeleteImage"/>
 </LinearLayout>
+
