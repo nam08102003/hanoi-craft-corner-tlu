@@ -5,114 +5,50 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".main.artisan.MainBoardArtisan">
+    tools:context=".main.mainboard_artisan.MainBoardArtisan">
 
     <FrameLayout
         android:id="@+id/frame_home"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/skinColor"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:visibility="gone" />
 
     <FrameLayout
         android:id="@+id/frame_heart"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/skinColor"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/text_my_products_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
-                android:layout_marginBottom="16dp"
-                android:gravity="center"
-                android:text="SẢN PHẨM CỦA TÔI"
-                android:textColor="@color/primary"
-                android:textSize="28sp"
-                android:textStyle="bold"
-                tools:ignore="HardcodedText" />
-
-            <ScrollView
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:fillViewport="true">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_horizontal|top"
-                    android:orientation="vertical"
-                    android:paddingLeft="24dp"
-                    android:paddingTop="0dp"
-                    android:paddingRight="24dp">
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/recycler_my_products"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:clipToPadding="false"
-                        android:paddingBottom="16dp"
-                        android:scrollbars="vertical" />
-                </LinearLayout>
-            </ScrollView>
-        </LinearLayout>
-    </FrameLayout>
+        android:visibility="gone" />
 
     <FrameLayout
         android:id="@+id/frame_wallet"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/skinColor"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:visibility="gone" />
 
     <FrameLayout
         android:id="@+id/frame_menu"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/skinColor"
-        android:visibility="visible"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:visibility="visible">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingLeft="24dp"
             android:paddingTop="32dp"
-            android:paddingRight="24dp"
-            tools:ignore="UselessParent">
+            android:paddingRight="24dp">
 
             <TextView
                 android:id="@+id/text_greeting"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:maxLines="2"
                 android:text="@string/greeting"
                 android:textColor="@color/primary"
-                android:textSize="20sp" />
+                android:textSize="28sp"
+                android:textStyle="bold" />
 
             <LinearLayout
-                android:id="@+id/artisan_info"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
@@ -125,8 +61,7 @@
                     android:layout_height="48dp"
                     android:layout_marginEnd="8dp"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/ic_baseline_person_24"
-                    tools:ignore="ContentDescription" />
+                    android:src="@drawable/ic_baseline_person_24" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -156,13 +91,12 @@
                             android:layout_height="wrap_content"
                             android:text="@string/verified"
                             android:textColor="#8F959E"
-                            android:textSize="14sp"
-                            tools:ignore="TextContrastCheck" />
+                            android:textSize="14sp" />
 
                         <View
                             android:layout_width="8dp"
                             android:layout_height="8dp"
-                            android:layout_marginStart="8dp"
+                            android:layout_marginLeft="8dp"
                             android:background="@drawable/green_dot_circle" />
                     </LinearLayout>
                 </LinearLayout>
@@ -209,8 +143,7 @@
                         android:layout_width="32dp"
                         android:layout_height="32dp"
                         android:layout_gravity="center"
-                        android:src="@drawable/ic_add_circle"
-                        tools:ignore="ContentDescription,ImageContrastCheck" />
+                        android:src="@drawable/ic_add_circle" />
 
                     <TextView
                         android:id="@+id/text_add_product"
@@ -220,8 +153,7 @@
                         android:duplicateParentState="true"
                         android:text="@string/add_product"
                         android:textColor="#8F959E"
-                        android:textSize="14sp"
-                        tools:ignore="TextContrastCheck" />
+                        android:textSize="14sp" />
                 </LinearLayout>
                 <!-- Button 2: Quản lý sản phẩm -->
                 <LinearLayout
@@ -244,8 +176,7 @@
                         android:layout_width="32dp"
                         android:layout_height="32dp"
                         android:layout_gravity="center"
-                        android:src="@drawable/ic_manage_products"
-                        tools:ignore="ContentDescription,ImageContrastCheck" />
+                        android:src="@drawable/ic_manage_products" />
 
                     <TextView
                         android:id="@+id/text_manage_products"
@@ -255,8 +186,7 @@
                         android:duplicateParentState="true"
                         android:text="@string/manage_products"
                         android:textColor="#8F959E"
-                        android:textSize="14sp"
-                        tools:ignore="TextContrastCheck" />
+                        android:textSize="14sp" />
                 </LinearLayout>
                 <!-- Button 3: Tin nhắn mới -->
                 <LinearLayout
@@ -279,8 +209,7 @@
                         android:layout_width="32dp"
                         android:layout_height="32dp"
                         android:layout_gravity="center"
-                        android:src="@drawable/ic_message"
-                        tools:ignore="ContentDescription,ImageContrastCheck" />
+                        android:src="@drawable/ic_message" />
 
                     <TextView
                         android:id="@+id/text_message"
@@ -290,8 +219,7 @@
                         android:duplicateParentState="true"
                         android:text="@string/new_message"
                         android:textColor="#8F959E"
-                        android:textSize="14sp"
-                        tools:ignore="TextContrastCheck" />
+                        android:textSize="14sp" />
                 </LinearLayout>
                 <!-- Button 4: Quản lý gian hàng -->
                 <LinearLayout
@@ -314,8 +242,7 @@
                         android:layout_width="32dp"
                         android:layout_height="32dp"
                         android:layout_gravity="center"
-                        app:srcCompat="@drawable/edit"
-                        tools:ignore="ContentDescription,ImageContrastCheck" />
+                        app:srcCompat="@drawable/edit" />
 
                     <TextView
                         android:id="@+id/text_store"
@@ -325,8 +252,7 @@
                         android:duplicateParentState="true"
                         android:text="@string/manage_store"
                         android:textColor="#8F959E"
-                        android:textSize="14sp"
-                        tools:ignore="TextContrastCheck" />
+                        android:textSize="14sp" />
                 </LinearLayout>
             </GridLayout>
 
@@ -343,7 +269,6 @@
 
             <!-- 2 dòng sản phẩm nổi bật -->
             <LinearLayout
-                android:id="@+id/linear_featured_1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
@@ -356,8 +281,7 @@
                     android:layout_height="90dp"
                     android:contentDescription="@string/product_image_1"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/ic_launcher_foreground"
-                    tools:ignore="ImageContrastCheck" />
+                    android:src="@drawable/ic_launcher_foreground" />
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -374,7 +298,6 @@
                         android:textStyle="bold" />
 
                     <TextView
-                        android:id="@+id/image_product_detail_1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/product_detail_1"
@@ -384,7 +307,6 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/linear_featured_2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
@@ -397,8 +319,7 @@
                     android:layout_height="90dp"
                     android:contentDescription="@string/product_image_2"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/ic_launcher_foreground"
-                    tools:ignore="ImageContrastCheck" />
+                    android:src="@drawable/ic_launcher_foreground" />
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -415,7 +336,6 @@
                         android:textStyle="bold" />
 
                     <TextView
-                        android:id="@+id/image_product_detail_2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/product_detail_2"
@@ -423,31 +343,18 @@
                         android:textSize="14sp" />
                 </LinearLayout>
             </LinearLayout>
-
-            <TextView
-                android:id="@+id/text_no_products"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:gravity="center"
-                android:text="@string/no_products"
-                android:textColor="#FF9800"
-                android:textSize="16sp"
-                android:visibility="gone" />
         </LinearLayout>
     </FrameLayout>
-
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:elevation="8dp"
         app:itemIconTint="@color/bottom_nav_icon_color"
         app:labelVisibilityMode="unlabeled"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:menu="@menu/bottom_nav_menu_artisan" />
+        app:menu="@menu/bottom_nav_menu_artisan"
+        android:elevation="8dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
