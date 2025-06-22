@@ -17,7 +17,7 @@ firebaseAuth = "23.2.1"
 firebaseDatabase = "21.0.0"
 firebaseFirestore = "25.1.4"
 firebaseStorage = "21.0.2"
-okhttp = "4.9.3"
+okhttp = "4.12.0"
 rules = "1.6.1"
 
 [libraries]

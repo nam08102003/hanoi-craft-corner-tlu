@@ -72,7 +72,7 @@ public class ArtisanInfo extends AppCompatActivity {
                     // Load avatar và cover nếu có
                     if (avatarUrl != null && !avatarUrl.isEmpty()) {
                         try {
-                            com.bumptech.glide.Glide.with(this).load(avatarUrl).into(avatarImage);
+                            com.bumptech.glide.Glide.with(this).load(avatarUrl).circleCrop().into(avatarImage);
                         } catch (Exception ignored) {}
                     }
                     if (coverUrl != null && !coverUrl.isEmpty()) {

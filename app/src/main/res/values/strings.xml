@@ -69,4 +69,23 @@
     <string name="edit">Chỉnh sửa</string>
     <string name="change">Thay đổi</string>
     <string name="cover_hint">Ấn vào đây để thay đổi ảnh bìa</string>
+    <string name="avatar">Avatar</string>
+    <string name="ad_image">Advertisement image</string>
+    <string name="hello_username">Hello %1$s</string>
+    <string name="prev_category">Danh mục trước</string>
+    <string name="share_prompt">Hãy chia sẻ sản phẩm của bạn với cộng đồng yêu nghệ thuật ngay!</string>
+    <string name="search_hint">Tìm kiếm…</string>
+    <string name="hot">HOT</string>
+    <string name="category_title">Danh Mục Sản Phẩm</string>
+    <string name="ceramic">Đồ Gốm</string>
+    <string name="textile">Dệt May</string>
+    <string name="painting">Tranh Vẽ</string>
+    <string name="next_category">Danh mục tiếp</string>
+    <string name="product_image">Ảnh sản phẩm</string>
+    <string name="product_name">Tên sản phẩm</string>
+    <string name="product_quantity">Số lượng: 0</string>
+    <string name="product_price">Giá: 0đ</string>
+    <string name="edit_product">Sửa</string>
+    <string name="edit_product_content_desc">Sửa sản phẩm</string>
+    <string name="delete_product">Xóa</string>
 </resources>

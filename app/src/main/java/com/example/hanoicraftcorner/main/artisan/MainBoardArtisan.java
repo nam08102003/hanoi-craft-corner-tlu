@@ -1,5 +1,6 @@
 package com.example.hanoicraftcorner.main.artisan;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import androidx.activity.EdgeToEdge;
@@ -19,6 +20,13 @@ public class MainBoardArtisan extends AppCompatActivity {
     private String email;
     private MyProductsAdapter myProductsAdapter;
 
+    // Category sliding logic
+    private final String[] allCategories = {"Đồ Gốm", "Dệt May", "Tranh Vẽ", "Mây Tre", "Gỗ", "Kim Loại", "Đá", "Khác"};
+    private int categoryStartIndex = 0;
+    private android.widget.Button btnCategory1, btnCategory2, btnCategory3;
+    private android.widget.ImageButton btnCategoryLeft, btnCategoryRight;
+
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,7 +88,7 @@ public class MainBoardArtisan extends AppCompatActivity {
             return true;
         });
 
-        // Thêm sự kiện click cho nút Thêm sản ph��m
+        // Thêm sự kiện click cho nút Thêm sản phẩm
         findViewById(R.id.btn_add_product).setOnClickListener(v -> {
             android.content.Intent intent = new android.content.Intent(MainBoardArtisan.this, AddProduct.class);
             intent.putExtra("email", email);
@@ -99,6 +107,49 @@ public class MainBoardArtisan extends AppCompatActivity {
             android.content.Intent intent = new android.content.Intent(MainBoardArtisan.this, ArtisanInfo.class);
             intent.putExtra("email", email);
             startActivity(intent);
+        });
+
+        // Setup ad ViewPager2 from Firestore (only load Image field)
+        androidx.viewpager2.widget.ViewPager2 viewPagerAds = findViewById(R.id.viewpager_ads);
+        java.util.List<String> adImages = new java.util.ArrayList<>();
+        AdPagerAdapter adPagerAdapter = new AdPagerAdapter(this, adImages);
+        viewPagerAds.setAdapter(adPagerAdapter);
+        viewPagerAds.setOffscreenPageLimit(1);
+        viewPagerAds.setOrientation(androidx.viewpager2.widget.ViewPager2.ORIENTATION_HORIZONTAL);
+        // Load ads from Firestore
+        com.google.firebase.firestore.FirebaseFirestore db = com.google.firebase.firestore.FirebaseFirestore.getInstance();
+        db.collection("ads").get().addOnSuccessListener(queryDocumentSnapshots -> {
+            adImages.clear();
+            for (com.google.firebase.firestore.DocumentSnapshot doc : queryDocumentSnapshots.getDocuments()) {
+                String imageUrl = doc.getString("Image");
+                if (imageUrl != null && !imageUrl.isEmpty()) {
+                    adImages.add(imageUrl);
+                }
+            }
+            adPagerAdapter.notifyDataSetChanged();
+        });
+
+        // Category buttons and arrows
+        btnCategory1 = findViewById(R.id.btn_category_1);
+        btnCategory2 = findViewById(R.id.btn_category_2);
+        btnCategory3 = findViewById(R.id.btn_category_3);
+        btnCategoryLeft = findViewById(R.id.btn_category_left);
+        btnCategoryRight = findViewById(R.id.btn_category_right);
+        updateCategoryButtons();
+
+        btnCategoryRight.setOnClickListener(v -> {
+            if (categoryStartIndex + 3 < allCategories.length) {
+                animateCategorySlide(-1); // Slide left
+                categoryStartIndex++;
+                updateCategoryButtons();
+            }
+        });
+        btnCategoryLeft.setOnClickListener(v -> {
+            if (categoryStartIndex > 0) {
+                animateCategorySlide(1); // Slide right
+                categoryStartIndex--;
+                updateCategoryButtons();
+            }
         });
     }
 
@@ -287,9 +338,14 @@ public class MainBoardArtisan extends AppCompatActivity {
                     // Cập nhật thông tin user
                     String username = userDoc.getString("Username");
                     String status = userDoc.getString("Status");
+                    String avatarUrl = userDoc.getString("Avatar");
+                    android.util.Log.d("MainBoardArtisan", "avatarUrl from Firestore: " + avatarUrl);
                     android.widget.TextView tv = findViewById(R.id.text_username);
+                    android.widget.TextView helloUsername = findViewById(R.id.text_greeting);
                     android.widget.TextView textVerified = findViewById(R.id.text_verified);
+                    android.widget.ImageView imageAvatar = findViewById(R.id.image_avatar);
                     if (tv != null && username != null) tv.setText(username);
+                    if (helloUsername != null && username != null) helloUsername.setText(getString(R.string.hello_username, username));
                     if (textVerified != null && status != null) {
                         textVerified.setText(status.equalsIgnoreCase("Verified") ? R.string.verified_text : R.string.pending_verification_text);
                         android.view.ViewGroup parent = (android.view.ViewGroup) textVerified.getParent();
@@ -298,6 +354,18 @@ public class MainBoardArtisan extends AppCompatActivity {
                             android.view.View dotView = parent.getChildAt(idx + 1);
                             dotView.setBackgroundResource(status.equalsIgnoreCase("Verified") ? R.drawable.green_dot_circle : R.drawable.yellow_dot_circle);
                         }
+                    }
+                    // Load avatar bằng Glide
+                    if (avatarUrl != null && !avatarUrl.isEmpty() && imageAvatar != null) {
+                        try {
+                            com.bumptech.glide.Glide.with(this).load(avatarUrl).circleCrop().into(imageAvatar);
+                        } catch (Exception e) {
+                            android.util.Log.e("MainBoardArtisan", "Glide error loading avatar", e);
+                            imageAvatar.setImageResource(R.drawable.ic_baseline_person_24);
+                        }
+                    } else if (imageAvatar != null) {
+                        android.util.Log.w("MainBoardArtisan", "avatarUrl is null or empty, using default avatar");
+                        imageAvatar.setImageResource(R.drawable.ic_baseline_person_24);
                     }
                     // Cập nhật sản phẩm nổi bật
                     userDoc.getReference().collection("products").get()
@@ -379,6 +447,42 @@ public class MainBoardArtisan extends AppCompatActivity {
     }
 
     private void loadHomeInfo() {
+        com.google.firebase.firestore.FirebaseFirestore db = com.google.firebase.firestore.FirebaseFirestore.getInstance();
+        db.collection("users")
+            .whereEqualTo("Email", email)
+            .get()
+            .addOnSuccessListener(queryDocumentSnapshots -> {
+                if (!queryDocumentSnapshots.isEmpty()) {
+                    com.google.firebase.firestore.DocumentSnapshot userDoc = queryDocumentSnapshots.getDocuments().get(0);
+                    String username = userDoc.getString("Username");
+                    String avatarUrl = userDoc.getString("Avatar");
+                    android.widget.TextView helloUsername = findViewById(R.id.text_hello_username);
+                    android.widget.ImageView imageAvatarHome = findViewById(R.id.image_avatar_home);
+                    if (helloUsername != null && username != null) {
+                        helloUsername.setText(getString(R.string.hello_username, username));
+                    }
+                    if (avatarUrl != null && !avatarUrl.isEmpty() && imageAvatarHome != null) {
+                        try {
+                            com.bumptech.glide.Glide.with(this)
+                                .load(avatarUrl)
+                                .placeholder(R.drawable.ic_baseline_person_24)
+                                .error(R.drawable.ic_baseline_person_24)
+                                .circleCrop()
+                                .into(imageAvatarHome);
+                        } catch (Exception e) {
+                            android.util.Log.e("MainBoardArtisan", "Glide error", e);
+                        }
+                    }
+                    // Add click listener to avatar to open menu frame
+                    if (imageAvatarHome != null) {
+                        imageAvatarHome.setOnClickListener(v -> {
+                            showFrame(R.id.frame_menu);
+                            BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+                            bottomNavigationView.setSelectedItemId(R.id.nav_menu);
+                        });
+                    }
+                }
+            });
     }
 
     private void loadHeartInfo() {
@@ -387,5 +491,22 @@ public class MainBoardArtisan extends AppCompatActivity {
 
     private void loadWalletInfo() {
         // TODO: Implement wallet info loading if needed
+    }
+
+    private void updateCategoryButtons() {
+        btnCategory1.setText(allCategories[categoryStartIndex]);
+        btnCategory2.setText(allCategories[categoryStartIndex + 1]);
+        btnCategory3.setText(allCategories[categoryStartIndex + 2]);
+        btnCategoryLeft.setVisibility(categoryStartIndex == 0 ? View.GONE : View.VISIBLE);
+        btnCategoryRight.setVisibility(categoryStartIndex + 3 >= allCategories.length ? View.GONE : View.VISIBLE);
+    }
+
+    private void animateCategorySlide(int direction) {
+        // direction: -1 = left, 1 = right
+        int distance = btnCategory1.getWidth() + btnCategory2.getWidth() + btnCategory3.getWidth();
+        float toX = direction * -distance;
+        btnCategory1.animate().translationX(toX).setDuration(200).withEndAction(() -> btnCategory1.setTranslationX(0)).start();
+        btnCategory2.animate().translationX(toX).setDuration(200).withEndAction(() -> btnCategory2.setTranslationX(0)).start();
+        btnCategory3.animate().translationX(toX).setDuration(200).withEndAction(() -> btnCategory3.setTranslationX(0)).start();
     }
 }
