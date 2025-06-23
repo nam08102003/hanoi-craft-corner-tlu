@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="320dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/bg_dialog"
+    android:padding="20dp">
+
+    <TextView
+        android:id="@+id/tvConfirmMessage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Bạn có chắc muốn xóa danh mục này không?"
+        android:textSize="15sp"
+        android:textColor="#000000"
+        android:gravity="center"
+        android:layout_marginBottom="24dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnCancelDelete"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:text="Hủy bỏ"
+            android:textColor="@color/white"
+            android:background="@drawable/bg_btn_cancel"
+            android:layout_marginEnd="12dp"
+            android:paddingHorizontal="20dp" />
+
+        <Button
+            android:id="@+id/btnConfirmDelete"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:text="Xoá"
+            android:textColor="#FFFFFF"
+            android:background="@drawable/bg_btn_delete"
+            android:paddingHorizontal="20dp" />
+    </LinearLayout>
+</LinearLayout>
