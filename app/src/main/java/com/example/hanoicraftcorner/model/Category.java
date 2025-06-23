@@ -1,6 +1,7 @@
 package com.example.hanoicraftcorner.model;
 
 import com.google.firebase.firestore.ServerTimestamp;
+
 import java.util.Date;
 
 public class Category {
@@ -18,6 +19,7 @@ public class Category {
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
+
     public Category() {
         // Required for Firestore
     }
@@ -27,7 +29,7 @@ public class Category {
         return id;
     }
 
-        public void setId(String id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -50,6 +52,7 @@ public class Category {
     public String getUpdatedAt() {
         return updatedAt;
     }
+
     public String getImageUrl() {
         return imageUrl;
     }
@@ -57,7 +60,8 @@ public class Category {
     public void setUpdatedAt(String updatedAt) {
         this.updatedAt = updatedAt;
     }
-        public void setImageUrl(String imageUrl) {
+
+    public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
     }
 
