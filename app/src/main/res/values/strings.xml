@@ -69,4 +69,6 @@
     <string name="edit">Chỉnh sửa</string>
     <string name="change">Thay đổi</string>
     <string name="cover_hint">Ấn vào đây để thay đổi ảnh bìa</string>
+    <string name="remove_button_desc">Remove item</string>
+
 </resources>
