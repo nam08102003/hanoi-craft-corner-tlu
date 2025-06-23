@@ -88,4 +88,6 @@
     <string name="edit_product">Sửa</string>
     <string name="edit_product_content_desc">Sửa sản phẩm</string>
     <string name="delete_product">Xóa</string>
+    <string name="remove_button_desc">Remove item</string>
+
 </resources>

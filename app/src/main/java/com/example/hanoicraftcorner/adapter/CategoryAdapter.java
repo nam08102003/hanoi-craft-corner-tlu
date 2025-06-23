@@ -6,57 +6,39 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
+import com.bumptech.glide.Glide;
 import com.example.hanoicraftcorner.R;
-import com.example.hanoicraftcorner.interfaces.OnCategoryListener;
 import com.example.hanoicraftcorner.model.Category;
-
 import java.util.List;
-
 
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder> {
 
-    private List<Category> categoryList;
     private Context context;
-    private List<String> docIdList;
-    private OnCategoryListener actionListener;
+    private List<Category> categoryList;
 
-    public CategoryAdapter(List<Category> categoryList, List<String> docIdList, Context context, OnCategoryListener actionListener) {
-        this.categoryList = categoryList;
-        this.docIdList = docIdList;
+    public CategoryAdapter(Context context, List<Category> categoryList) {
         this.context = context;
-        this.actionListener = actionListener;
+        this.categoryList = categoryList;
     }
 
     @NonNull
     @Override
     public CategoryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.admin_item_category, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.item_category, parent, false);
         return new CategoryViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull CategoryViewHolder holder, int position) {
         Category category = categoryList.get(position);
-        String docId = docIdList.get(position);
+        holder.nameTextView.setText(category.getName());
 
-        holder.txtName.setText(category.getName());
-        holder.txtCreatedAt.setText(category.getCreatedAt());
-
-        holder.btnEdit.setOnClickListener(v -> {
-            if (actionListener != null) {
-                actionListener.onEditClicked(category, docId);
-            }
-        });
-
-        holder.btnDelete.setOnClickListener(v -> {
-            if (actionListener != null) {
-                actionListener.onDelete(categoryList.get(position), docIdList.get(position));
-            }
-        });
+        Glide.with(context)
+                .load(category.getImageUrl())
+                .placeholder(R.drawable.ic_placeholder_default)
+                .into(holder.imageView);
     }
 
     @Override
@@ -65,17 +47,13 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
     }
 
     public static class CategoryViewHolder extends RecyclerView.ViewHolder {
-        TextView txtName, txtCreatedAt;
-        ImageView btnEdit, btnDelete;
+        ImageView imageView;
+        TextView nameTextView;
 
         public CategoryViewHolder(@NonNull View itemView) {
             super(itemView);
-            txtName = itemView.findViewById(R.id.txtName);
-            txtCreatedAt = itemView.findViewById(R.id.txtCreatedAt);
-            btnEdit = itemView.findViewById(R.id.btnEdit);
-            btnDelete = itemView.findViewById(R.id.btnDelete);
+            imageView = itemView.findViewById(R.id.image_category);
+            nameTextView = itemView.findViewById(R.id.text_category_name);
         }
     }
-}
-
-
+} 
