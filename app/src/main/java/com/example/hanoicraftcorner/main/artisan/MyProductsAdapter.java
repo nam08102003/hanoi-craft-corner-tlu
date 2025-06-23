@@ -56,7 +56,7 @@ public class MyProductsAdapter extends RecyclerView.Adapter<MyProductsAdapter.Pr
     public static class ProductViewHolder extends RecyclerView.ViewHolder {
         private final ImageView image;
         private final TextView name, quantity, price;
-        private final View layoutEdit, layoutDelete;
+        // private final View layoutEdit, layoutDelete; // Commented out as these are not used
 
         public ProductViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -64,8 +64,9 @@ public class MyProductsAdapter extends RecyclerView.Adapter<MyProductsAdapter.Pr
             name = itemView.findViewById(R.id.text_product_name);
             quantity = itemView.findViewById(R.id.text_product_quantity);
             price = itemView.findViewById(R.id.text_product_price);
-            layoutEdit = itemView.findViewById(R.id.layout_edit);
-            layoutDelete = itemView.findViewById(R.id.layout_delete);
+            // Remove or comment out these lines if layout_edit and layout_delete do not exist in the item layout
+            // layoutEdit = itemView.findViewById(R.id.layout_edit);
+            // layoutDelete = itemView.findViewById(R.id.layout_delete);
         }
 
         public void bind(DocumentSnapshot product, OnProductActionListener listener) {
@@ -92,8 +93,8 @@ public class MyProductsAdapter extends RecyclerView.Adapter<MyProductsAdapter.Pr
             } else {
                 image.setImageResource(R.drawable.ic_launcher_foreground);
             }
-            layoutEdit.setOnClickListener(v -> listener.onEdit(product));
-            layoutDelete.setOnClickListener(v -> listener.onDelete(product));
+            // layoutEdit.setOnClickListener(v -> listener.onEdit(product));
+            // layoutDelete.setOnClickListener(v -> listener.onDelete(product));
         }
     }
 }

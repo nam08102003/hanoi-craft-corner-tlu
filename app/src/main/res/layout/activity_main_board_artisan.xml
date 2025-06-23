@@ -108,26 +108,25 @@
                     android:layout_marginTop="16dp"
                     android:gravity="start"
                     android:text="@string/category_title"
-                    android:textColor="@color/primary"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
+                    android:textColor="@color/black"
+                    android:textSize="20sp" />
 
                 <LinearLayout
                     android:id="@+id/layout_category_toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
                     android:layout_marginTop="8dp"
+                    android:background="@drawable/bg_toolbar_rounded_gray"
                     android:gravity="center_vertical"
-                    android:background="@drawable/bg_toolbar_rounded_gray">
+                    android:orientation="horizontal">
 
                     <ImageButton
                         android:id="@+id/btn_category_left"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         android:background="@android:color/transparent"
-                        android:src="@drawable/ic_chevron_left_black"
                         android:contentDescription="@string/prev_category"
+                        android:src="@drawable/ic_chevron_left_black"
                         android:visibility="gone" />
 
                     <Button
@@ -135,33 +134,33 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:background="@android:color/transparent"
+                        android:stateListAnimator="@null"
                         android:text="@string/ceramic"
                         android:textAllCaps="false"
-                        android:background="@android:color/transparent"
-                        android:textColor="@color/primary"
-                        android:stateListAnimator="@null" />
+                        android:textColor="@color/primary" />
 
                     <Button
                         android:id="@+id/btn_category_2"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:background="@android:color/transparent"
+                        android:stateListAnimator="@null"
                         android:text="@string/textile"
                         android:textAllCaps="false"
-                        android:background="@android:color/transparent"
-                        android:textColor="@color/primary"
-                        android:stateListAnimator="@null" />
+                        android:textColor="@color/primary" />
 
                     <Button
                         android:id="@+id/btn_category_3"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:background="@android:color/transparent"
+                        android:stateListAnimator="@null"
                         android:text="@string/painting"
                         android:textAllCaps="false"
-                        android:background="@android:color/transparent"
-                        android:textColor="@color/primary"
-                        android:stateListAnimator="@null" />
+                        android:textColor="@color/primary" />
 
                     <ImageButton
                         android:id="@+id/btn_category_right"
@@ -172,6 +171,26 @@
                         android:src="@drawable/ic_chevron_right_black"
                         tools:ignore="TouchTargetSizeCheck" />
                 </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tv_featured_products"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start"
+                    android:layout_marginTop="16dp"
+                    android:text="Sản phẩm nổi bật"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycler_featured_products"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:orientation="horizontal"
+                    android:overScrollMode="never"
+                    android:paddingBottom="8dp"
+                    tools:listitem="@layout/item_featured_product" />
 
             </LinearLayout>
         </ScrollView>
@@ -598,6 +617,16 @@
                 android:visibility="gone" />
         </LinearLayout>
     </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:padding="16dp">
+
+
+    </LinearLayout>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"

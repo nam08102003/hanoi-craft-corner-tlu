@@ -19,9 +19,10 @@ public class MainBoardArtisan extends AppCompatActivity {
 
     private String email;
     private MyProductsAdapter myProductsAdapter;
+    private FeaturedProductsAdapter featuredProductsAdapter;
 
     // Category sliding logic
-    private final String[] allCategories = {"Đồ Gốm", "Dệt May", "Tranh Vẽ", "Mây Tre", "Gỗ", "Kim Loại", "Đá", "Khác"};
+    private java.util.List<String> allCategories = new java.util.ArrayList<>();
     private int categoryStartIndex = 0;
     private android.widget.Button btnCategory1, btnCategory2, btnCategory3;
     private android.widget.ImageButton btnCategoryLeft, btnCategoryRight;
@@ -53,6 +54,13 @@ public class MainBoardArtisan extends AppCompatActivity {
         });
         recyclerMyProducts.setAdapter(myProductsAdapter);
         recyclerMyProducts.setLayoutManager(new androidx.recyclerview.widget.LinearLayoutManager(this));
+
+        // Setup Featured Products RecyclerView
+        androidx.recyclerview.widget.RecyclerView recyclerFeaturedProducts = findViewById(R.id.recycler_featured_products);
+        featuredProductsAdapter = new FeaturedProductsAdapter();
+        recyclerFeaturedProducts.setAdapter(featuredProductsAdapter);
+        recyclerFeaturedProducts.setLayoutManager(new androidx.recyclerview.widget.LinearLayoutManager(this, androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL, false));
+        loadFeaturedProducts();
 
         // Đăng ký ActivityResultLauncher cho AddProduct
         ActivityResultLauncher<android.content.Intent> addProductLauncher =
@@ -138,7 +146,7 @@ public class MainBoardArtisan extends AppCompatActivity {
         updateCategoryButtons();
 
         btnCategoryRight.setOnClickListener(v -> {
-            if (categoryStartIndex + 3 < allCategories.length) {
+            if (categoryStartIndex + 3 < allCategories.size()) {
                 animateCategorySlide(-1); // Slide left
                 categoryStartIndex++;
                 updateCategoryButtons();
@@ -150,6 +158,22 @@ public class MainBoardArtisan extends AppCompatActivity {
                 categoryStartIndex--;
                 updateCategoryButtons();
             }
+        });
+
+        // Load categories from Firestore
+        db = com.google.firebase.firestore.FirebaseFirestore.getInstance();
+        db.collection("categories").get().addOnSuccessListener(queryDocumentSnapshots -> {
+            allCategories.clear();
+            for (com.google.firebase.firestore.DocumentSnapshot doc : queryDocumentSnapshots.getDocuments()) {
+                String name = doc.getString("name");
+                if (name != null && !name.isEmpty()) {
+                    allCategories.add(name);
+                }
+            }
+            // Ensure at least 3 categories for UI
+            while (allCategories.size() < 3) allCategories.add("");
+            categoryStartIndex = 0;
+            updateCategoryButtons();
         });
     }
 
@@ -262,6 +286,44 @@ public class MainBoardArtisan extends AppCompatActivity {
                         .addOnFailureListener(e -> android.util.Log.e("MainBoardArtisan", "Lỗi truy vấn Products", e));
                 }
             });
+    }
+
+    private void loadFeaturedProducts() {
+        com.google.firebase.firestore.FirebaseFirestore db = com.google.firebase.firestore.FirebaseFirestore.getInstance();
+        java.util.List<java.util.Map<String, Object>> featuredList = new java.util.ArrayList<>();
+        db.collection("users").get().addOnSuccessListener(usersSnap -> {
+            java.util.List<com.google.firebase.firestore.DocumentSnapshot> users = usersSnap.getDocuments();
+            if (users.isEmpty()) {
+                featuredProductsAdapter.setProducts(featuredList);
+                return;
+            }
+            final int[] counter = {0};
+            for (com.google.firebase.firestore.DocumentSnapshot user : users) {
+                user.getReference().collection("products").get().addOnSuccessListener(productsSnap -> {
+                    for (com.google.firebase.firestore.DocumentSnapshot product : productsSnap.getDocuments()) {
+                        String img = product.getString("Image");
+                        String name = product.getString("Name");
+                        String price = product.getString("Price");
+                        if (img != null && name != null && price != null) {
+                            java.util.Map<String, Object> map = new java.util.HashMap<>();
+                            map.put("Image", img);
+                            map.put("Name", name);
+                            map.put("Price", price);
+                            featuredList.add(map);
+                        }
+                    }
+                    counter[0]++;
+                    if (counter[0] == users.size()) {
+                        featuredProductsAdapter.setProducts(featuredList);
+                    }
+                }).addOnFailureListener(e -> {
+                    counter[0]++;
+                    if (counter[0] == users.size()) {
+                        featuredProductsAdapter.setProducts(featuredList);
+                    }
+                });
+            }
+        });
     }
 
     // --- Cloudinary helper dùng chung cho mọi file ---
@@ -494,11 +556,19 @@ public class MainBoardArtisan extends AppCompatActivity {
     }
 
     private void updateCategoryButtons() {
-        btnCategory1.setText(allCategories[categoryStartIndex]);
-        btnCategory2.setText(allCategories[categoryStartIndex + 1]);
-        btnCategory3.setText(allCategories[categoryStartIndex + 2]);
+        if (allCategories == null || allCategories.size() < 3) {
+            btnCategory1.setText("");
+            btnCategory2.setText("");
+            btnCategory3.setText("");
+            btnCategoryLeft.setVisibility(View.GONE);
+            btnCategoryRight.setVisibility(View.GONE);
+            return;
+        }
+        btnCategory1.setText(allCategories.get(categoryStartIndex));
+        btnCategory2.setText(allCategories.get(categoryStartIndex + 1));
+        btnCategory3.setText(allCategories.get(categoryStartIndex + 2));
         btnCategoryLeft.setVisibility(categoryStartIndex == 0 ? View.GONE : View.VISIBLE);
-        btnCategoryRight.setVisibility(categoryStartIndex + 3 >= allCategories.length ? View.GONE : View.VISIBLE);
+        btnCategoryRight.setVisibility(categoryStartIndex + 3 >= allCategories.size() ? View.GONE : View.VISIBLE);
     }
 
     private void animateCategorySlide(int direction) {
