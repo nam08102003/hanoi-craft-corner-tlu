@@ -70,5 +70,10 @@
     <string name="change">Thay đổi</string>
     <string name="cover_hint">Ấn vào đây để thay đổi ảnh bìa</string>
     <string name="remove_button_desc">Remove item</string>
-
+    <string-array name="sort_options">
+        <item>Tên tăng dần</item>
+        <item>Tên giảm dần</item>
+        <item>Ngày tạo tăng dần</item>
+        <item>Ngày tạo giảm dần</item>
+    </string-array>
 </resources>
