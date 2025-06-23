@@ -20,11 +20,12 @@ public class MainBoardArtisan extends AppCompatActivity {
     private String email;
     private MyProductsAdapter myProductsAdapter;
     private FeaturedProductsAdapter featuredProductsAdapter;
+    private ActivityResultLauncher<android.content.Intent> addProductLauncher;
 
     // Category sliding logic
-    private java.util.List<String> allCategories = new java.util.ArrayList<>();
+    private final java.util.List<String> allCategories = new java.util.ArrayList<>();
     private int categoryStartIndex = 0;
-    private android.widget.Button btnCategory1, btnCategory2, btnCategory3;
+    private android.widget.Button[] btnCategories;
     private android.widget.ImageButton btnCategoryLeft, btnCategoryRight;
 
     @SuppressLint("NotifyDataSetChanged")
@@ -39,6 +40,12 @@ public class MainBoardArtisan extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        btnCategories = new android.widget.Button[] {
+            findViewById(R.id.btn_category_1),
+            findViewById(R.id.btn_category_2),
+            findViewById(R.id.btn_category_3)
+        };
 
         // Khởi tạo RecyclerView và Adapter cho sản phẩm của tôi
         androidx.recyclerview.widget.RecyclerView recyclerMyProducts = findViewById(R.id.recycler_my_products);
@@ -63,8 +70,8 @@ public class MainBoardArtisan extends AppCompatActivity {
         loadFeaturedProducts();
 
         // Đăng ký ActivityResultLauncher cho AddProduct
-        ActivityResultLauncher<android.content.Intent> addProductLauncher =
-            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+        addProductLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(), result -> {
                 if (result.getResultCode() == RESULT_OK) {
                     // Reload lại thông tin sản phẩm sau khi thêm sản phẩm
                     reloadProductInfo(email);
@@ -100,6 +107,7 @@ public class MainBoardArtisan extends AppCompatActivity {
         findViewById(R.id.btn_add_product).setOnClickListener(v -> {
             android.content.Intent intent = new android.content.Intent(MainBoardArtisan.this, AddProduct.class);
             intent.putExtra("email", email);
+            intent.putStringArrayListExtra("categories", new java.util.ArrayList<>(allCategories));
             addProductLauncher.launch(intent);
         });
 
@@ -137,10 +145,6 @@ public class MainBoardArtisan extends AppCompatActivity {
             adPagerAdapter.notifyDataSetChanged();
         });
 
-        // Category buttons and arrows
-        btnCategory1 = findViewById(R.id.btn_category_1);
-        btnCategory2 = findViewById(R.id.btn_category_2);
-        btnCategory3 = findViewById(R.id.btn_category_3);
         btnCategoryLeft = findViewById(R.id.btn_category_left);
         btnCategoryRight = findViewById(R.id.btn_category_right);
         updateCategoryButtons();
@@ -160,6 +164,18 @@ public class MainBoardArtisan extends AppCompatActivity {
             }
         });
 
+        // Gán sự kiện click cho các nút category để lọc sản phẩm nổi bật
+        for (int i = 0; i < btnCategories.length; i++) {
+            final int idx = i;
+            btnCategories[i].setOnClickListener(v -> {
+                selectCategoryButton(idx);
+                String category = btnCategories[idx].getText().toString();
+                if (!category.isEmpty()) loadFeaturedProductsByCategory(category);
+            });
+        }
+        // Set default selected
+        selectCategoryButton(0);
+
         // Load categories from Firestore
         db = com.google.firebase.firestore.FirebaseFirestore.getInstance();
         db.collection("categories").get().addOnSuccessListener(queryDocumentSnapshots -> {
@@ -175,24 +191,28 @@ public class MainBoardArtisan extends AppCompatActivity {
             categoryStartIndex = 0;
             updateCategoryButtons();
         });
+
+        loadFeaturedArtisan();
     }
 
     private void startEditProductActivity(com.google.firebase.firestore.DocumentSnapshot product) {
         android.content.Intent intent = new android.content.Intent(MainBoardArtisan.this, AddProduct.class);
-        intent.putExtra("email", email);
+        intent.putExtra("isEdit", true);
         intent.putExtra("productId", product.getId());
-        intent.putExtra("productName", product.getString("Name"));
-        intent.putExtra("description", product.getString("Description"));
-        intent.putExtra("price", product.getString("Price"));
-        intent.putExtra("category", product.getString("Category"));
-        intent.putExtra("quantity", product.getString("Quantity"));
-        intent.putExtra("imageUrl", product.getString("Image"));
-        startActivity(intent);
+        intent.putExtra("Name", product.getString("Name"));
+        intent.putExtra("Quantity", product.getString("Quantity"));
+        intent.putExtra("Price", product.getString("Price"));
+        intent.putExtra("Image", product.getString("Image"));
+        intent.putExtra("Description", product.getString("Description"));
+        intent.putExtra("Category", product.getString("Category"));
+        intent.putExtra("email", email);
+        intent.putStringArrayListExtra("categories", new java.util.ArrayList<>(allCategories));
+        addProductLauncher.launch(intent);
     }
 
     private void showDeleteProductDialog(com.google.firebase.firestore.DocumentSnapshot product) {
         androidx.appcompat.app.AlertDialog dialog = new androidx.appcompat.app.AlertDialog.Builder(MainBoardArtisan.this)
-            .setMessage("Bạn có chắc chắn muốn xóa sản phẩm này không?")
+            .setMessage("Bạn có chắc chắn muốn xóa sản phẩm?")
             .setCancelable(true)
             .create();
         android.widget.LinearLayout layout = new android.widget.LinearLayout(MainBoardArtisan.this);
@@ -209,7 +229,7 @@ public class MainBoardArtisan extends AppCompatActivity {
         btnDelete.setLayoutParams(paramsDelete);
 
         android.widget.Button btnCancel = new android.widget.Button(MainBoardArtisan.this);
-        btnCancel.setText("Hủy bỏ");
+        btnCancel.setText("Hủy");
         btnCancel.setTextColor(android.graphics.Color.WHITE);
         btnCancel.setBackgroundColor(android.graphics.Color.parseColor("#757575")); // Gray
         android.widget.LinearLayout.LayoutParams paramsCancel = new android.widget.LinearLayout.LayoutParams(0, android.widget.LinearLayout.LayoutParams.WRAP_CONTENT, 1f);
@@ -232,98 +252,100 @@ public class MainBoardArtisan extends AppCompatActivity {
     // Hàm reloadProductInfo: chỉ dùng cho các thao tác thêm/xóa/sửa sản phẩm, cập nhật số lượng và trạng thái sản phẩm, không cập nhật sản phẩm nổi bật
     private void reloadProductInfo(String email) {
         com.google.firebase.firestore.FirebaseFirestore db = com.google.firebase.firestore.FirebaseFirestore.getInstance();
-        db.collection("users")
-            .whereEqualTo("Email", email)
+        db.collection("products")
+            .whereEqualTo("email", email)
             .get()
-            .addOnSuccessListener(queryDocumentSnapshots -> {
-                if (!queryDocumentSnapshots.isEmpty()) {
-                    com.google.firebase.firestore.DocumentSnapshot userDoc = queryDocumentSnapshots.getDocuments().get(0);
-                    userDoc.getReference().collection("products").get()
-                        .addOnSuccessListener(productsSnapshot -> {
-                            int productCount = productsSnapshot.size();
-                            android.widget.TextView textStatus = findViewById(R.id.text_status);
-                            android.widget.TextView textNoProducts = findViewById(R.id.text_no_products);
-                            android.widget.LinearLayout linearFeatured1 = findViewById(R.id.linear_featured_1);
-                            android.widget.LinearLayout linearFeatured2 = findViewById(R.id.linear_featured_2);
-                            android.widget.LinearLayout linearManageProducts = findViewById(R.id.btn_manage_products);
-                            if (productCount == 0) {
-                                if (textNoProducts != null) textNoProducts.setVisibility(View.VISIBLE);
-                                if (linearFeatured1 != null) linearFeatured1.setVisibility(View.GONE);
-                                if (linearFeatured2 != null) linearFeatured2.setVisibility(View.GONE);
-                                if (linearManageProducts != null) {
-                                    linearManageProducts.setEnabled(false);
-                                    linearManageProducts.setAlpha(0.5f);
-                                }
-                            } else {
-                                if (textNoProducts != null) textNoProducts.setVisibility(View.GONE);
-                                if (linearFeatured1 != null) linearFeatured1.setVisibility(View.VISIBLE);
-                                if (linearFeatured2 != null) linearFeatured2.setVisibility(View.VISIBLE);
-                                if (linearManageProducts != null) {
-                                    linearManageProducts.setEnabled(true);
-                                    linearManageProducts.setAlpha(1f);
-                                }
-                            }
-                            if (textStatus != null) {
-                                textStatus.setText(getString(R.string.product_count, productCount));
-                                textStatus.setVisibility(View.VISIBLE);
-                            }
-                        })
-                        .addOnFailureListener(e -> android.util.Log.e("MainBoardArtisan", "Lỗi truy vấn Products", e));
+            .addOnSuccessListener(productsSnapshot -> {
+                int productCount = productsSnapshot.size();
+                android.widget.TextView textStatus = findViewById(R.id.text_status);
+                android.widget.TextView textNoProducts = findViewById(R.id.text_no_products);
+                android.widget.LinearLayout linearFeatured1 = findViewById(R.id.linear_featured_1);
+                android.widget.LinearLayout linearFeatured2 = findViewById(R.id.linear_featured_2);
+                android.widget.LinearLayout linearManageProducts = findViewById(R.id.btn_manage_products);
+                if (productCount == 0) {
+                    if (textNoProducts != null) textNoProducts.setVisibility(View.VISIBLE);
+                    if (linearFeatured1 != null) linearFeatured1.setVisibility(View.GONE);
+                    if (linearFeatured2 != null) linearFeatured2.setVisibility(View.GONE);
+                    if (linearManageProducts != null) {
+                        linearManageProducts.setEnabled(false);
+                        linearManageProducts.setAlpha(0.5f);
+                    }
+                } else {
+                    if (textNoProducts != null) textNoProducts.setVisibility(View.GONE);
+                    if (linearFeatured1 != null) linearFeatured1.setVisibility(View.VISIBLE);
+                    if (linearFeatured2 != null) linearFeatured2.setVisibility(View.VISIBLE);
+                    if (linearManageProducts != null) {
+                        linearManageProducts.setEnabled(true);
+                        linearManageProducts.setAlpha(1f);
+                    }
                 }
-            });
+                if (textStatus != null) {
+                    textStatus.setText(getString(R.string.product_count, productCount));
+                    textStatus.setVisibility(View.VISIBLE);
+                }
+            })
+            .addOnFailureListener(e -> android.util.Log.e("MainBoardArtisan", "Lỗi truy vấn Products", e));
     }
     // Hàm load sản phẩm từ Firestore vào RecyclerView
     private void loadMyProducts() {
         com.google.firebase.firestore.FirebaseFirestore db = com.google.firebase.firestore.FirebaseFirestore.getInstance();
-        db.collection("users")
-            .whereEqualTo("Email", email)
+        db.collection("products")
+            .whereEqualTo("email", email)
             .get()
-            .addOnSuccessListener(queryDocumentSnapshots -> {
-                if (!queryDocumentSnapshots.isEmpty()) {
-                    com.google.firebase.firestore.DocumentSnapshot userDoc = queryDocumentSnapshots.getDocuments().get(0);
-                    userDoc.getReference().collection("products").get()
-                        .addOnSuccessListener(productsSnapshot -> myProductsAdapter.setProducts(productsSnapshot.getDocuments()))
-                        .addOnFailureListener(e -> android.util.Log.e("MainBoardArtisan", "Lỗi truy vấn Products", e));
-                }
-            });
+            .addOnSuccessListener(productsSnapshot -> myProductsAdapter.setProducts(productsSnapshot.getDocuments()))
+            .addOnFailureListener(e -> android.util.Log.e("MainBoardArtisan", "Lỗi truy vấn Products", e));
     }
 
     private void loadFeaturedProducts() {
         com.google.firebase.firestore.FirebaseFirestore db = com.google.firebase.firestore.FirebaseFirestore.getInstance();
         java.util.List<java.util.Map<String, Object>> featuredList = new java.util.ArrayList<>();
-        db.collection("users").get().addOnSuccessListener(usersSnap -> {
-            java.util.List<com.google.firebase.firestore.DocumentSnapshot> users = usersSnap.getDocuments();
-            if (users.isEmpty()) {
+        db.collection("products")
+            .get()
+            .addOnSuccessListener(productsSnap -> {
+                for (com.google.firebase.firestore.DocumentSnapshot product : productsSnap.getDocuments()) {
+                    String img = product.getString("Image");
+                    String name = product.getString("Name");
+                    String price = product.getString("Price");
+                    if (img != null && name != null && price != null) {
+                        java.util.Map<String, Object> map = new java.util.HashMap<>();
+                        map.put("Image", img);
+                        map.put("Name", name);
+                        map.put("Price", price);
+                        featuredList.add(map);
+                    }
+                }
                 featuredProductsAdapter.setProducts(featuredList);
-                return;
-            }
-            final int[] counter = {0};
-            for (com.google.firebase.firestore.DocumentSnapshot user : users) {
-                user.getReference().collection("products").get().addOnSuccessListener(productsSnap -> {
-                    for (com.google.firebase.firestore.DocumentSnapshot product : productsSnap.getDocuments()) {
-                        String img = product.getString("Image");
-                        String name = product.getString("Name");
-                        String price = product.getString("Price");
-                        if (img != null && name != null && price != null) {
-                            java.util.Map<String, Object> map = new java.util.HashMap<>();
-                            map.put("Image", img);
-                            map.put("Name", name);
-                            map.put("Price", price);
-                            featuredList.add(map);
+            });
+    }
+
+    private void loadFeaturedArtisan() {
+        com.google.firebase.firestore.FirebaseFirestore db = com.google.firebase.firestore.FirebaseFirestore.getInstance();
+        db.collection("users")
+            .whereEqualTo("Role", "artisan")
+            .limit(1)
+            .get()
+            .addOnSuccessListener(queryDocumentSnapshots -> {
+                if (!queryDocumentSnapshots.isEmpty()) {
+                    com.google.firebase.firestore.DocumentSnapshot artisan = queryDocumentSnapshots.getDocuments().get(0);
+                    String name = artisan.getString("Username");
+                    String intro = artisan.getString("Introduce");
+                    String backgroundUrl = artisan.getString("Background");
+                    android.widget.TextView tvName = findViewById(R.id.tv_artisan_name);
+                    android.widget.TextView tvIntro = findViewById(R.id.tv_artisan_intro);
+                    android.widget.ImageView imgCover = findViewById(R.id.img_artisan_cover);
+                    if (tvName != null && name != null) tvName.setText(name);
+                    if (tvIntro != null && intro != null) tvIntro.setText(intro);
+                    if (imgCover != null && backgroundUrl != null && !backgroundUrl.isEmpty()) {
+                        try {
+                            com.bumptech.glide.Glide.with(this).load(backgroundUrl).centerCrop().into(imgCover);
+                        } catch (Exception e) {
+                            imgCover.setImageResource(R.drawable.ic_baseline_person_24);
                         }
+                    } else if (imgCover != null) {
+                        imgCover.setImageResource(R.drawable.ic_baseline_person_24);
                     }
-                    counter[0]++;
-                    if (counter[0] == users.size()) {
-                        featuredProductsAdapter.setProducts(featuredList);
-                    }
-                }).addOnFailureListener(e -> {
-                    counter[0]++;
-                    if (counter[0] == users.size()) {
-                        featuredProductsAdapter.setProducts(featuredList);
-                    }
-                });
-            }
-        });
+                }
+            });
     }
 
     // --- Cloudinary helper dùng chung cho mọi file ---
@@ -339,15 +361,10 @@ public class MainBoardArtisan extends AppCompatActivity {
     private void deleteProductWithImage(com.google.firebase.firestore.DocumentSnapshot product) {
         deleteCloudinaryImage(product.getString("Image"));
         com.google.firebase.firestore.FirebaseFirestore db = com.google.firebase.firestore.FirebaseFirestore.getInstance();
-        db.collection("users").whereEqualTo("Email", email).get().addOnSuccessListener(q -> {
-            if (!q.isEmpty()) {
-                com.google.firebase.firestore.DocumentSnapshot userDoc = q.getDocuments().get(0);
-                userDoc.getReference().collection("products").document(product.getId())
-                    .delete()
-                    .addOnSuccessListener(unused -> loadMyProducts())
-                    .addOnFailureListener(e -> android.widget.Toast.makeText(this, "Lỗi xóa sản phẩm!", android.widget.Toast.LENGTH_SHORT).show());
-            }
-        });
+        db.collection("products").document(product.getId())
+            .delete()
+            .addOnSuccessListener(unused -> loadMyProducts())
+            .addOnFailureListener(e -> android.widget.Toast.makeText(this, "Lỗi xóa sản phẩm!", android.widget.Toast.LENGTH_SHORT).show());
     }
     // Sửa lỗi không reload frame_menu khi ấn lại menu
     // Thay đổi showFrame để luôn gọi loadMenuInfo nếu frame_menu được chọn
@@ -430,7 +447,9 @@ public class MainBoardArtisan extends AppCompatActivity {
                         imageAvatar.setImageResource(R.drawable.ic_baseline_person_24);
                     }
                     // Cập nhật sản phẩm nổi bật
-                    userDoc.getReference().collection("products").get()
+                    com.google.firebase.firestore.FirebaseFirestore.getInstance().collection("products")
+                        .whereEqualTo("email", email)
+                        .get()
                         .addOnSuccessListener(productsSnapshot -> {
                             int productCount = productsSnapshot.size();
                             android.widget.TextView textStatus = findViewById(R.id.text_status);
@@ -557,26 +576,66 @@ public class MainBoardArtisan extends AppCompatActivity {
 
     private void updateCategoryButtons() {
         if (allCategories == null || allCategories.size() < 3) {
-            btnCategory1.setText("");
-            btnCategory2.setText("");
-            btnCategory3.setText("");
+            for (android.widget.Button btnCategory : btnCategories) {
+                btnCategory.setText("");
+            }
             btnCategoryLeft.setVisibility(View.GONE);
             btnCategoryRight.setVisibility(View.GONE);
             return;
         }
-        btnCategory1.setText(allCategories.get(categoryStartIndex));
-        btnCategory2.setText(allCategories.get(categoryStartIndex + 1));
-        btnCategory3.setText(allCategories.get(categoryStartIndex + 2));
+        for (int i = 0; i < btnCategories.length; i++) {
+            btnCategories[i].setText(allCategories.get(categoryStartIndex + i));
+        }
+        selectCategoryButton(selectedCategoryIndex); // Always update highlight after changing text
         btnCategoryLeft.setVisibility(categoryStartIndex == 0 ? View.GONE : View.VISIBLE);
         btnCategoryRight.setVisibility(categoryStartIndex + 3 >= allCategories.size() ? View.GONE : View.VISIBLE);
     }
 
     private void animateCategorySlide(int direction) {
         // direction: -1 = left, 1 = right
-        int distance = btnCategory1.getWidth() + btnCategory2.getWidth() + btnCategory3.getWidth();
+        int distance = btnCategories[0].getWidth() + btnCategories[1].getWidth() + btnCategories[2].getWidth();
         float toX = direction * -distance;
-        btnCategory1.animate().translationX(toX).setDuration(200).withEndAction(() -> btnCategory1.setTranslationX(0)).start();
-        btnCategory2.animate().translationX(toX).setDuration(200).withEndAction(() -> btnCategory2.setTranslationX(0)).start();
-        btnCategory3.animate().translationX(toX).setDuration(200).withEndAction(() -> btnCategory3.setTranslationX(0)).start();
+        for (android.widget.Button btnCategory : btnCategories) {
+            btnCategory.animate().translationX(toX).setDuration(200).withEndAction(() -> btnCategory.setTranslationX(0)).start();
+        }
+    }
+
+    // Hàm lọc sản phẩm nổi bật theo category
+    private void loadFeaturedProductsByCategory(String category) {
+        com.google.firebase.firestore.FirebaseFirestore db = com.google.firebase.firestore.FirebaseFirestore.getInstance();
+        java.util.List<java.util.Map<String, Object>> featuredList = new java.util.ArrayList<>();
+        db.collection("products")
+            .whereEqualTo("Category", category)
+            .get()
+            .addOnSuccessListener(productsSnap -> {
+                for (com.google.firebase.firestore.DocumentSnapshot product : productsSnap.getDocuments()) {
+                    String img = product.getString("Image");
+                    String name = product.getString("Name");
+                    String price = product.getString("Price");
+                    if (img != null && name != null && price != null) {
+                        java.util.Map<String, Object> map = new java.util.HashMap<>();
+                        map.put("Image", img);
+                        map.put("Name", name);
+                        map.put("Price", price);
+                        featuredList.add(map);
+                    }
+                }
+                featuredProductsAdapter.setProducts(featuredList);
+            });
+    }
+
+    // Highlight selected category button with background and text color
+    private int selectedCategoryIndex = 0;
+    private void selectCategoryButton(int selectedIndex) {
+        selectedCategoryIndex = selectedIndex;
+        for (int i = 0; i < btnCategories.length; i++) {
+            if (i == selectedIndex) {
+                btnCategories[i].setBackgroundResource(R.drawable.category_button_background);
+                btnCategories[i].setTextColor(getColor(android.R.color.white));
+            } else {
+                btnCategories[i].setBackgroundResource(android.R.color.transparent);
+                btnCategories[i].setTextColor(getColor(R.color.primary));
+            }
+        }
     }
 }

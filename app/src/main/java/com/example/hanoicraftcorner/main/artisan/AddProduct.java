@@ -51,26 +51,29 @@ public class AddProduct extends AppCompatActivity {
         findViewById(R.id.imageButton).setOnClickListener(v -> finish());
         productImageView = findViewById(R.id.productImageView);
 
-        android.widget.TextView addPicText = findViewById(R.id.textView2);
+        // Use ViewBinding or cache views if possible for better performance (not shown here for brevity)
+        final android.widget.TextView addPicText = findViewById(R.id.textView2);
         updateAddPicButtonText(addPicText, imageUri);
-        findViewById(R.id.addPic).setOnClickListener(v -> new androidx.appcompat.app.AlertDialog.Builder(this)
-            .setTitle(imageUri == null ? "Thêm ảnh sản phẩm" : "Sửa ảnh sản phẩm")
-            .setItems(new CharSequence[]{"Chụp ảnh", "Chọn từ thư viện"}, (dialog, which) -> {
-                if (which == 0) {
-                    if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, CAMERA_PERMISSION_REQUEST_CODE);
-                    } else {
-                        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                        cameraImageUri = createImageUri();
-                        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, cameraImageUri);
-                        imagePickerLauncher.launch(takePictureIntent);
+        findViewById(R.id.addPic).setOnClickListener(v -> {
+            new androidx.appcompat.app.AlertDialog.Builder(this)
+                .setTitle(imageUri == null ? "Thêm ảnh sản phẩm" : "Sửa ảnh sản phẩm")
+                .setItems(new CharSequence[]{"Chụp ảnh", "Chọn từ thư viện"}, (dialog, which) -> {
+                    if (which == 0) {
+                        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, CAMERA_PERMISSION_REQUEST_CODE);
+                        } else {
+                            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                            cameraImageUri = createImageUri();
+                            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, cameraImageUri);
+                            imagePickerLauncher.launch(takePictureIntent);
+                        }
+                    } else if (which == 1) {
+                        Intent pickPhoto = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                        imagePickerLauncher.launch(pickPhoto);
                     }
-                } else if (which == 1) {
-                    Intent pickPhoto = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                    imagePickerLauncher.launch(pickPhoto);
-                }
-            })
-            .show());
+                })
+                .show();
+        });
         // Update button text after picking image
         imagePickerLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -100,16 +103,37 @@ public class AddProduct extends AppCompatActivity {
             findViewById(R.id.text_add_product_title).setVisibility(android.view.View.GONE);
             // Change button text to "Lưu"
             ((android.widget.Button)findViewById(R.id.addProductButton)).setText("Lưu");
-            // Load data into fields
-            ((android.widget.EditText)findViewById(R.id.editTextProductName)).setText(getIntent().getStringExtra("productName"));
-            ((android.widget.EditText)findViewById(R.id.editTextDescription)).setText(getIntent().getStringExtra("description"));
-            ((android.widget.EditText)findViewById(R.id.editTextPrice)).setText(getIntent().getStringExtra("price"));
-            ((android.widget.EditText)findViewById(R.id.editTextCategory)).setText(getIntent().getStringExtra("category"));
-            ((android.widget.EditText)findViewById(R.id.editTextQuantity)).setText(getIntent().getStringExtra("quantity"));
-            editingImageUrl = getIntent().getStringExtra("imageUrl");
-            if (editingImageUrl != null && !editingImageUrl.isEmpty()) {
-                com.bumptech.glide.Glide.with(this).load(editingImageUrl).into(productImageView);
-            }
+            // Query Firestore for product details
+            db.collection("products").document(editingProductId).get()
+                .addOnSuccessListener(document -> {
+                    if (document.exists()) {
+                        ((android.widget.EditText)findViewById(R.id.editTextProductName)).setText(document.getString("Name"));
+                        ((android.widget.EditText)findViewById(R.id.editTextDescription)).setText(document.getString("Description"));
+                        ((android.widget.EditText)findViewById(R.id.editTextPrice)).setText(document.getString("Price"));
+                        ((android.widget.EditText)findViewById(R.id.editTextCategory)).setText(document.getString("Category"));
+                        ((android.widget.EditText)findViewById(R.id.editTextQuantity)).setText(document.getString("Quantity"));
+                        editingImageUrl = document.getString("Image");
+                        if (editingImageUrl != null && !editingImageUrl.isEmpty()) {
+                            com.bumptech.glide.Glide.with(this).load(editingImageUrl).into(productImageView);
+                            if (addPicText != null) addPicText.setText("Sửa ảnh");
+                        } else {
+                            if (addPicText != null) addPicText.setText("Thêm ảnh");
+                        }
+                    }
+                });
+        }
+
+        // Receive categories from intent and set up suggestions for category field
+        java.util.ArrayList<String> categories = getIntent().getStringArrayListExtra("categories");
+        android.widget.AutoCompleteTextView categoryAuto = findViewById(R.id.editTextCategory);
+        if (categories != null && !categories.isEmpty()) {
+            android.widget.ArrayAdapter<String> adapter = new android.widget.ArrayAdapter<>(
+                this,
+                android.R.layout.simple_dropdown_item_1line,
+                categories
+            );
+            categoryAuto.setAdapter(adapter);
+            categoryAuto.setThreshold(1); // show suggestions after 1 character
         }
 
         findViewById(R.id.addProductButton).setOnClickListener(v -> {
@@ -120,16 +144,23 @@ public class AddProduct extends AppCompatActivity {
             EditText productNameEt = findViewById(R.id.editTextProductName);
             EditText descriptionEt = findViewById(R.id.editTextDescription);
             EditText priceEt = findViewById(R.id.editTextPrice);
-            EditText categoryEt = findViewById(R.id.editTextCategory);
+            // Use categoryAuto instead of looking up R.id.editTextCategory again
             EditText quantityEt = findViewById(R.id.editTextQuantity);
 
             String productName = productNameEt.getText().toString().trim();
             String description = descriptionEt.getText().toString().trim();
             String price = priceEt.getText().toString().trim();
-            String category = categoryEt.getText().toString().trim();
+            String category = categoryAuto.getText().toString().trim();
             String quantity = quantityEt.getText().toString().trim();
 
-            if (!validateFields(productNameEt, descriptionEt, priceEt, categoryEt, quantityEt,
+            // Nếu category chưa có trong danh sách gợi ý thì thêm vào collection categories
+            if (categories != null && !category.isEmpty() && !categories.contains(category)) {
+                java.util.HashMap<String, Object> newCat = new java.util.HashMap<>();
+                newCat.put("name", category);
+                db.collection("categories").add(newCat);
+            }
+
+            if (!validateFields(productNameEt, descriptionEt, priceEt, categoryAuto, quantityEt,
                     productName, description, price, category, quantity)) {
                 return;
             }
@@ -223,37 +254,31 @@ public class AddProduct extends AppCompatActivity {
 
     // Save product to Firestore
     private void saveProduct(String productName, String description, String price, String category, String quantity, String imageUrl) {
-        db.collection("users").whereEqualTo("Email", userEmail).get().addOnSuccessListener(queryDocumentSnapshots -> {
-            if (!queryDocumentSnapshots.isEmpty()) {
-                DocumentReference userDoc = queryDocumentSnapshots.getDocuments().get(0).getReference();
-                java.util.Map<String, Object> productInfo = new java.util.HashMap<>();
-                productInfo.put("Name", productName);
-                productInfo.put("Description", description);
-                productInfo.put("Price", price);
-                productInfo.put("Category", category);
-                productInfo.put("Quantity", quantity);
-                // Nếu imageUri khác null nhưng imageUrl null/rỗng thì KHÔNG thêm sản phẩm
-                if (imageUri != null && (imageUrl == null || imageUrl.isEmpty())) {
-                    android.util.Log.e("AddProduct", "Không lấy được URL ảnh từ Cloudinary! imageUrl=null, imageUri=" + imageUri);
-                    return;
-                }
-                if (imageUrl != null && !imageUrl.isEmpty()) {
-                    productInfo.put("Image", imageUrl);
-                }
-                userDoc.collection("products")
-                    .add(productInfo)
-                    .addOnSuccessListener(documentReference -> {
-                        Intent intent = new Intent(this, com.example.hanoicraftcorner.main.artisan.MainBoardArtisan.class);
-                        intent.putExtra("email", userEmail);
-                        setResult(RESULT_OK, intent);
-                        startActivity(intent);
-                        finish();
-                    })
-                    .addOnFailureListener(e -> android.util.Log.e("AddProduct", "Lỗi khi thêm sản phẩm vào subcollection products!", e));
-            } else {
-                android.util.Log.e("AddProduct", "Không tìm thấy người dùng!");
-            }
-        }).addOnFailureListener(e -> android.util.Log.e("AddProduct", "Lỗi Firestore khi tìm user!", e));
+        java.util.Map<String, Object> productInfo = new java.util.HashMap<>();
+        productInfo.put("Name", productName);
+        productInfo.put("Description", description);
+        productInfo.put("Price", price);
+        productInfo.put("Category", category);
+        productInfo.put("Quantity", quantity);
+        productInfo.put("email", userEmail); // Add email for querying
+        // Nếu imageUri khác null nhưng imageUrl null/rỗng thì KHÔNG thêm sản phẩm
+        if (imageUri != null && (imageUrl == null || imageUrl.isEmpty())) {
+            android.util.Log.e("AddProduct", "Không lấy được URL ảnh từ Cloudinary! imageUrl=null, imageUri=" + imageUri);
+            return;
+        }
+        if (imageUrl != null && !imageUrl.isEmpty()) {
+            productInfo.put("Image", imageUrl);
+        }
+        db.collection("products")
+            .add(productInfo)
+            .addOnSuccessListener(documentReference -> {
+                Intent intent = new Intent(this, com.example.hanoicraftcorner.main.artisan.MainBoardArtisan.class);
+                intent.putExtra("email", userEmail);
+                setResult(RESULT_OK, intent);
+                startActivity(intent);
+                finish();
+            })
+            .addOnFailureListener(e -> android.util.Log.e("AddProduct", "Lỗi khi thêm sản phẩm vào collection products!", e));
     }
 
     // --- Cloudinary helper dùng chung ---
@@ -263,36 +288,33 @@ public class AddProduct extends AppCompatActivity {
 
     // Thêm hàm updateProduct
     private void updateProduct(String productId, String productName, String description, String price, String category, String quantity, Uri newImageUri, String oldImageUrl) {
-        db.collection("users").whereEqualTo("Email", userEmail).get().addOnSuccessListener(queryDocumentSnapshots -> {
-            if (!queryDocumentSnapshots.isEmpty()) {
-                DocumentReference userDoc = queryDocumentSnapshots.getDocuments().get(0).getReference();
-                DocumentReference productRef = userDoc.collection("products").document(productId);
-                java.util.Map<String, Object> productInfo = new java.util.HashMap<>();
-                productInfo.put("Name", productName);
-                productInfo.put("Description", description);
-                productInfo.put("Price", price);
-                productInfo.put("Category", category);
-                productInfo.put("Quantity", quantity);
-                if (newImageUri != null) {
-                    // Nếu có ảnh cũ thì xóa trước khi upload ảnh mới
-                    if (oldImageUrl != null && !oldImageUrl.isEmpty()) {
-                        deleteCloudinaryImage(oldImageUrl);
-                        uploadAndUpdate(productRef, productInfo, newImageUri);
-                    } else {
-                        uploadAndUpdate(productRef, productInfo, newImageUri);
-                    }
-                } else if (oldImageUrl != null && !oldImageUrl.isEmpty()) {
-                    productInfo.put("Image", oldImageUrl);
-                    productRef.update(productInfo)
-                        .addOnSuccessListener(unused -> finish())
-                        .addOnFailureListener(e -> android.util.Log.e("AddProduct", "Lỗi cập nhật sản phẩm!", e));
-                } else {
-                    productRef.update(productInfo)
-                        .addOnSuccessListener(unused -> finish())
-                        .addOnFailureListener(e -> android.util.Log.e("AddProduct", "Lỗi cập nhật sản phẩm!", e));
-                }
+        // Update product in top-level 'products' collection
+        DocumentReference productRef = db.collection("products").document(productId);
+        java.util.Map<String, Object> productInfo = new java.util.HashMap<>();
+        productInfo.put("Name", productName);
+        productInfo.put("Description", description);
+        productInfo.put("Price", price);
+        productInfo.put("Category", category);
+        productInfo.put("Quantity", quantity);
+        productInfo.put("email", userEmail);
+        if (newImageUri != null) {
+            // Nếu có ảnh cũ thì xóa trước khi upload ảnh mới
+            if (oldImageUrl != null && !oldImageUrl.isEmpty()) {
+                deleteCloudinaryImage(oldImageUrl);
+                uploadAndUpdate(productRef, productInfo, newImageUri);
+            } else {
+                uploadAndUpdate(productRef, productInfo, newImageUri);
             }
-        }).addOnFailureListener(e -> android.util.Log.e("AddProduct", "Lỗi Firestore khi tìm user!", e));
+        } else if (oldImageUrl != null && !oldImageUrl.isEmpty()) {
+            productInfo.put("Image", oldImageUrl);
+            productRef.update(productInfo)
+                .addOnSuccessListener(unused -> finish())
+                .addOnFailureListener(e -> android.util.Log.e("AddProduct", "Lỗi cập nhật sản phẩm!", e));
+        } else {
+            productRef.update(productInfo)
+                .addOnSuccessListener(unused -> finish())
+                .addOnFailureListener(e -> android.util.Log.e("AddProduct", "Lỗi cập nhật sản phẩm!", e));
+        }
     }
 
     private void uploadAndUpdate(DocumentReference productRef, java.util.Map<String, Object> productInfo, Uri newImageUri) {
@@ -320,10 +342,10 @@ public class AddProduct extends AppCompatActivity {
     // Helper to update addPic button text
     @SuppressLint("SetTextI18n")
     private void updateAddPicButtonText(android.widget.TextView addPicText, Uri imageUri) {
-        if (imageUri == null) {
-            addPicText.setText("Thêm ảnh");
-        } else {
+        if ((imageUri != null) || (productImageView.getDrawable() != null && !(productImageView.getDrawable() instanceof android.graphics.drawable.BitmapDrawable && ((android.graphics.drawable.BitmapDrawable) productImageView.getDrawable()).getBitmap() == null))) {
             addPicText.setText("Sửa ảnh");
+        } else {
+            addPicText.setText("Thêm ảnh");
         }
     }
 

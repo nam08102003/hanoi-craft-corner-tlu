@@ -1,5 +1,6 @@
 package com.example.hanoicraftcorner.main.artisan;
 
+import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,8 +56,7 @@ public class MyProductsAdapter extends RecyclerView.Adapter<MyProductsAdapter.Pr
 
     public static class ProductViewHolder extends RecyclerView.ViewHolder {
         private final ImageView image;
-        private final TextView name, quantity, price;
-        // private final View layoutEdit, layoutDelete; // Commented out as these are not used
+        private final TextView name, quantity, price, edit, delete;
 
         public ProductViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -64,11 +64,11 @@ public class MyProductsAdapter extends RecyclerView.Adapter<MyProductsAdapter.Pr
             name = itemView.findViewById(R.id.text_product_name);
             quantity = itemView.findViewById(R.id.text_product_quantity);
             price = itemView.findViewById(R.id.text_product_price);
-            // Remove or comment out these lines if layout_edit and layout_delete do not exist in the item layout
-            // layoutEdit = itemView.findViewById(R.id.layout_edit);
-            // layoutDelete = itemView.findViewById(R.id.layout_delete);
+            edit = itemView.findViewById(R.id.text_edit);
+            delete = itemView.findViewById(R.id.text_delete);
         }
 
+        @SuppressLint("SetTextI18n")
         public void bind(DocumentSnapshot product, OnProductActionListener listener) {
             name.setText(product.getString("Name"));
             quantity.setText("Số lượng: " + (product.getString("Quantity") != null ? product.getString("Quantity") : "0"));
@@ -93,8 +93,8 @@ public class MyProductsAdapter extends RecyclerView.Adapter<MyProductsAdapter.Pr
             } else {
                 image.setImageResource(R.drawable.ic_launcher_foreground);
             }
-            // layoutEdit.setOnClickListener(v -> listener.onEdit(product));
-            // layoutDelete.setOnClickListener(v -> listener.onDelete(product));
+            edit.setOnClickListener(v -> listener.onEdit(product));
+            delete.setOnClickListener(v -> listener.onDelete(product));
         }
     }
 }

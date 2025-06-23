@@ -14,4 +14,6 @@
     <color name="light_pink">#BF57FB</color>
     <color name="cyan">#55A1A9</color>
     <color name="light_blue">#4382FF</color>
+    <color name="category_button_normal">#F5F5F5</color>
+    <color name="category_button_pressed">#E0E0E0</color>
 </resources>

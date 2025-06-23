@@ -14,7 +14,7 @@
         android:layout_marginStart="32dp"
         android:layout_marginTop="48dp"
         android:background="@android:color/transparent"
-        android:contentDescription="Quay lại"
+        android:contentDescription="@string/back"
         android:src="@drawable/ic_back"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -27,7 +27,7 @@
         android:layout_marginTop="51dp"
         android:layout_weight="1"
         android:gravity="center"
-        android:text="Thêm sản phẩm"
+        android:text="@string/add_product"
         android:textSize="22sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
@@ -82,7 +82,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Tên sản phẩm" />
+            android:text="@string/product_name" />
 
         <EditText
             android:id="@+id/editTextProductName"
@@ -98,12 +98,16 @@
             android:paddingEnd="32dp"
             android:textColor="@color/black"
             android:textSize="12sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:autofillHints="username"
+            android:hint="@string/product_name"
+            android:inputType="text"
+            />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Mô tả" />
+            android:text="@string/introduce_label" />
 
         <EditText
             android:id="@+id/editTextDescription"
@@ -122,12 +126,16 @@
             android:paddingEnd="32dp"
             android:textColor="@color/black"
             android:textSize="12sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:autofillHints="username"
+            android:hint="@string/introduce_label"
+            android:inputType="text"
+            />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Giá bán" />
+            android:text="@string/product_price" />
 
         <EditText
             android:id="@+id/editTextPrice"
@@ -144,14 +152,17 @@
             android:paddingEnd="32dp"
             android:textColor="@color/black"
             android:textSize="12sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:autofillHints="username"
+            android:hint="@string/product_price"
+            />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Danh mục" />
+            android:text="@string/category_title" />
 
-        <EditText
+        <AutoCompleteTextView
             android:id="@+id/editTextCategory"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -165,12 +176,14 @@
             android:paddingEnd="32dp"
             android:textColor="@color/black"
             android:textSize="12sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:hint="@string/category_title"
+            />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Số lượng" />
+            android:text="@string/product_quantity" />
 
         <EditText
             android:id="@+id/editTextQuantity"
@@ -187,7 +200,10 @@
             android:paddingEnd="32dp"
             android:textColor="@color/black"
             android:textSize="12sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:autofillHints="username"
+            android:hint="@string/product_quantity"
+            />
     </LinearLayout>
 
     <Button
@@ -198,7 +214,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="33dp"
         android:backgroundTint="@color/btnColorPurple"
-        android:text="Thêm"
+        android:text="@string/save"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/fieldsContainer" />
@@ -209,7 +225,7 @@
         android:layout_height="80dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="36dp"
-        android:contentDescription="Ảnh sản phẩm"
+        android:contentDescription="@string/contDesImageItem"
         android:scaleType="centerCrop"
         app:layout_constraintStart_toEndOf="@+id/addPic"
         app:layout_constraintTop_toBottomOf="@+id/imageButton" />
