@@ -10,6 +10,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.bumptech.glide.Glide;
 import com.example.hanoicraftcorner.databinding.ActivityProfileUserBinding;
 import com.example.hanoicraftcorner.model.Profileuser;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -19,10 +21,9 @@ public class ProfileUserActivity extends AppCompatActivity {
     private ActivityProfileUserBinding binding;
     private Profileuser currentUser;
     private FirebaseFirestore db;
+    private FirebaseAuth mAuth;
     private static final String TAG = "ProfileUserActivity";
-    // QUAN TRỌNG: Thay thế bằng một ID người dùng hợp lệ từ collection "users" trên Firestore của bạn
-    // Ví dụ: "user_001", "user_002", "user_003"
-    private static final String USER_ID = "user_002"; // <<<<< THAY ĐỔI ID NÀY CHO ĐÚNG
+    private static final String USER_ID = "user_002"; // ID để test
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +32,7 @@ public class ProfileUserActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         db = FirebaseFirestore.getInstance();
+        mAuth = FirebaseAuth.getInstance();
 
         setupToolbarAndProfileInfo();
         fetchUserData();
@@ -51,7 +53,19 @@ public class ProfileUserActivity extends AppCompatActivity {
             // Không return ở đây nữa để nó vẫn thử fetch, nhưng log cảnh báo
         }
 
+        // FirebaseUser firebaseUser = mAuth.getCurrentUser();
+        // if (firebaseUser == null) {
+        //     // Người dùng chưa đăng nhập
+        //     Log.w(TAG, "Người dùng chưa đăng nhập. Không thể tải thông tin.");
+        //     Toast.makeText(this, "Vui lòng đăng nhập để xem thông tin.", Toast.LENGTH_LONG).show();
+        //     binding.textUserNameTag.setText("Chưa đăng nhập");
+        //     // Có thể chuyển hướng về màn hình đăng nhập
+        //     // startActivity(new Intent(this, LoginActivity.class));
+        //     // finish();
+        //     return;
+        // }
 
+        // String userId = firebaseUser.getUid();
         DocumentReference userRef = db.collection("users").document(USER_ID);
         Log.d(TAG, "Đang lấy dữ liệu cho người dùng ID: " + USER_ID);
 

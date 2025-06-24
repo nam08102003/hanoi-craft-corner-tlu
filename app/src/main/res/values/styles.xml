@@ -10,5 +10,4 @@
         <item name="android:maxLength">1</item>
         <item name="android:background">@drawable/otp_box</item>
     </style>
-
 </resources>
