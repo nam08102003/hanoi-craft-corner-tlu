@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.hanoicraftcorner.R;
 import com.example.hanoicraftcorner.adapter.FavoriteAdapter;
-import com.example.hanoicraftcorner.Model.FavoriteItem;
+import com.example.hanoicraftcorner.model.FavoriteItem;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import java.util.ArrayList;
 import java.util.List;

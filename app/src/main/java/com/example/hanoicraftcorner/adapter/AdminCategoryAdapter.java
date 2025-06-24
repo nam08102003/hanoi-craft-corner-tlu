@@ -13,12 +13,12 @@ import com.example.hanoicraftcorner.R;
 import com.example.hanoicraftcorner.model.Category;
 import java.util.List;
 
-public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder> {
+public class AdminCategoryAdapter extends RecyclerView.Adapter<AdminCategoryAdapter.CategoryViewHolder> {
 
     private Context context;
     private List<Category> categoryList;
 
-    public CategoryAdapter(Context context, List<Category> categoryList) {
+    public AdminCategoryAdapter(Context context, List<Category> categoryList) {
         this.context = context;
         this.categoryList = categoryList;
     }
@@ -56,4 +56,4 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
             nameTextView = itemView.findViewById(R.id.text_category_name);
         }
     }
-} 
+}

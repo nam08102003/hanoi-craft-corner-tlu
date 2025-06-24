@@ -10,19 +10,18 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.example.hanoicraftcorner.R;
 import com.example.hanoicraftcorner.main.admin.AdminUserDetailActivity;
 import com.example.hanoicraftcorner.model.User;
 
 import java.util.List;
 
-public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder> {
+public class AdminUserAdapter extends RecyclerView.Adapter<AdminUserAdapter.UserViewHolder> {
 
     private List<User> userList;
     private Context context;
 
-    public UserAdapter(Context context, List<User> users) {
+    public AdminUserAdapter(Context context, List<User> users) {
         this.context = context;
         this.userList = users;
     }
@@ -54,7 +53,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
 
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, AdminUserDetailActivity.class);
-            intent.putExtra("user", user);
+            intent.putExtra("user_id", user.getUser_id());
             context.startActivity(intent);
         });
     }

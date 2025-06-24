@@ -1,11 +1,8 @@
 package com.example.hanoicraftcorner.main.admin;
 
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -20,12 +17,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.hanoicraftcorner.R;
-import com.example.hanoicraftcorner.adapter.UserAdapter;
+import com.example.hanoicraftcorner.adapter.AdminUserAdapter;
 import com.example.hanoicraftcorner.model.User;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +29,7 @@ import java.util.List;
 public class AdminUserManagementActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
-    private UserAdapter adapter;
+    private AdminUserAdapter adapter;
     private List<User> userList = new ArrayList<>();
     private FirebaseFirestore db;
 
@@ -59,7 +55,7 @@ public class AdminUserManagementActivity extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.recyclerViewUsers);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new UserAdapter(this, userList);
+        adapter = new AdminUserAdapter(this, userList);
         recyclerView.setAdapter(adapter);
 
         db = FirebaseFirestore.getInstance();
@@ -86,6 +82,8 @@ public class AdminUserManagementActivity extends AppCompatActivity {
                     userList.clear();
                     for (DocumentSnapshot doc : queryDocumentSnapshots) {
                         User user = doc.toObject(User.class);
+                        String user_id = doc.getId();
+                        user.setUser_id(user_id);
                         userList.add(user);
                     }
                     adapter.notifyDataSetChanged();
@@ -110,6 +108,8 @@ public class AdminUserManagementActivity extends AppCompatActivity {
                     userList.clear();
                     for (DocumentSnapshot doc : queryDocumentSnapshots) {
                         User user = doc.toObject(User.class);
+                        String user_id = doc.getId();
+                        user.setUser_id(user_id);
                         userList.add(user);
                     }
                     adapter.notifyDataSetChanged();

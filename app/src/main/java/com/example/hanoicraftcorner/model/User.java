@@ -1,18 +1,20 @@
 package com.example.hanoicraftcorner.model;
 
 import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.ServerTimestamp;
 
 import java.io.Serializable;
 import java.util.List;
 
 public class User implements Serializable {
-    private String email, password, fullname, role, avatar, phone, introduce, brand_name, status;
+    private String user_id, email, password, fullname, role, avatar, phone, introduce, brand_name, status, address;
     private List<String> images;
+    @ServerTimestamp()
     private Timestamp created_at, updated_at;
 
     public User() {}
 
-    public User(String avatar, String brand_name, Timestamp created_at, String fullname, String email, List<String> images, String introduce, String password, String phone, String role, String status, Timestamp updated_at) {
+    public User(String user_id, String avatar, String address,String brand_name, Timestamp created_at, String fullname, String email, List<String> images, String introduce, String password, String phone, String role, String status, Timestamp updated_at) {
         this.avatar = avatar;
         this.brand_name = brand_name;
         this.created_at = created_at;
@@ -25,6 +27,16 @@ public class User implements Serializable {
         this.role = role;
         this.status = status;
         this.updated_at = updated_at;
+        this.address = address;
+        this.user_id = user_id;
+    }
+
+    public String getUser_id() {
+        return user_id;
+    }
+
+    public void setUser_id(String user_id) {
+        this.user_id = user_id;
     }
 
     public String getEmail() {
@@ -65,6 +77,14 @@ public class User implements Serializable {
 
     public void setFullname(String fullname) {
         this.fullname = fullname;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public List<String> getImages() {

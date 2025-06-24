@@ -3,6 +3,7 @@ package com.example.hanoicraftcorner.main.admin;
 import android.app.AlertDialog;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -19,6 +20,8 @@ import androidx.core.view.WindowInsetsCompat;
 import com.bumptech.glide.Glide;
 import com.example.hanoicraftcorner.R;
 import com.example.hanoicraftcorner.model.User;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -28,6 +31,7 @@ public class AdminUserDetailActivity extends AppCompatActivity {
     private TextView tvFullname, tvRole, tvPhone, tvEmail, tvLink;
     private FirebaseFirestore db;
     private String userId;
+    private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,10 +53,11 @@ public class AdminUserDetailActivity extends AppCompatActivity {
 
         db = FirebaseFirestore.getInstance();
 
-        User user = (User) getIntent().getSerializableExtra("user");
+        userId = (String) getIntent().getSerializableExtra("user_id");
 
-        if (user != null) {
-            userId = user.getEmail();
+        if (userId != null) {
+
+            getUserById(userId);
 
             tvFullname.setText(user.getFullname());
             tvRole.setText(user.getRole());
@@ -95,19 +100,27 @@ public class AdminUserDetailActivity extends AppCompatActivity {
 
 
     private void deleteUser(String email) {
-        db.collection("users")
-                .whereEqualTo("email", email)
-                .get()
-                .addOnSuccessListener(query -> {
-                    for (DocumentSnapshot doc : query) {
-                        doc.getReference().delete()
-                                .addOnSuccessListener(unused -> {
-                                    Toast.makeText(this, "Đã xoá người dùng", Toast.LENGTH_SHORT).show();
-                                    finish();
-                                })
-                                .addOnFailureListener(e ->
-                                        Toast.makeText(this, "Lỗi xoá: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+        db.collection("users").document(userId)
+                .delete()
+                .addOnSuccessListener(aVoid -> {
+                    Toast.makeText(this, "Đã xoá người dùng", Toast.LENGTH_SHORT).show();
+                    finish();
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(this, "Lỗi xoá: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
+    }
+
+    public void getUserById(String userId) {
+        db.collection("users").document(userId).get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        User userDetail = documentSnapshot.toObject(User.class);
+                        this.user = userDetail;
                     }
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("FIREBASE_ERROR", "Error loading user", e);
                 });
     }
 }
