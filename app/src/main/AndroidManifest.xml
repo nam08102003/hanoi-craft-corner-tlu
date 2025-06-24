@@ -20,7 +20,10 @@
         android:theme="@style/Theme.HaNoiCraftCorner"
         tools:targetApi="31">
         <activity
-            android:name=".AdminCategoryActivity"
+            android:name=".main.admin.AdminUserDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".main.admin.AdminCategoryActivity"
             android:exported="false" />
         <activity
             android:name=".main.artisan.ArtisanInfo"
@@ -59,8 +62,10 @@
             android:name=".main.opening.WelcomeActivity"
             android:exported="true" />
         <activity
-            android:name=".main.admin.AdminCategoryActivity"
-            android:exported="true">
+            android:name=".main.admin.AdminUserManagementActivity"
+            android:exported="true"
+            tools:node="replace"
+            tools:ignore="DuplicateActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
