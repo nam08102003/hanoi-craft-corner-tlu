@@ -14,4 +14,11 @@
     <color name="light_pink">#BF57FB</color>
     <color name="cyan">#55A1A9</color>
     <color name="light_blue">#4382FF</color>
+
+        <!-- Màu nền đen của TextView tên người dùng -->
+        <color name="profile_name_bg">#2C2C2C</color>
+
+        <!-- Các màu khác cho giao diện -->
+        <color name="profile_header_bg">#9D76F8</color>
+        <color name="community_button_unselected">#4B4949</color>
 </resources>

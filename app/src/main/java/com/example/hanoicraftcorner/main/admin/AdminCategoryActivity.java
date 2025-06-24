@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.hanoicraftcorner.R;
+import com.example.hanoicraftcorner.adapter.AdminCategoryAdapter;
 import com.example.hanoicraftcorner.interfaces.OnCategoryListener;
 import com.example.hanoicraftcorner.model.Category;
 import com.example.hanoicraftcorner.adapter.CategoryAdapter;
@@ -42,7 +43,7 @@ import java.util.Map;
 public class AdminCategoryActivity extends AppCompatActivity implements OnCategoryListener {
 
     private RecyclerView recyclerView;
-    private CategoryAdapter adapter;
+    private AdminCategoryAdapter adapter;
     private List<Category> categoryList;
 
     private FirebaseFirestore db;
@@ -54,11 +55,11 @@ public class AdminCategoryActivity extends AppCompatActivity implements OnCatego
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_admin_category);
-//        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-//            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-//            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-//            return insets;
-//        });
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
 
         EditText edtSearch = findViewById(R.id.edtSearch);
         Button btnSearch = findViewById(R.id.btnSearch);
@@ -70,7 +71,7 @@ public class AdminCategoryActivity extends AppCompatActivity implements OnCatego
 
         categoryList = new ArrayList<>();
         docIdList = new ArrayList<>();
-        adapter = new CategoryAdapter(categoryList, docIdList, this, this);
+        adapter = new AdminCategoryAdapter(this, categoryList);
         recyclerView.setAdapter(adapter);
         recyclerView.setAdapter(adapter);
 
@@ -100,14 +101,12 @@ public class AdminCategoryActivity extends AppCompatActivity implements OnCatego
                     for (DocumentSnapshot doc : queryDocumentSnapshots) {
                         String name = doc.getString("name");
                         String parentId = doc.getString("parent_id");
+                        String imageUrl = doc.getString("imageUrl");
 
-                        Timestamp createdTimestamp = doc.getTimestamp("created_at");
-                        Timestamp updatedTimestamp = doc.getTimestamp("updated_at");
+                        Timestamp createdAt = doc.getTimestamp("created_at");
+                        Timestamp updatedAt = doc.getTimestamp("updated_at");
 
-                        String createdAt = formatTimestamp(createdTimestamp);
-                        String updatedAt = formatTimestamp(updatedTimestamp);
-
-                        Category category = new Category(name, parentId, createdAt, updatedAt);
+                        Category category = new Category(name, parentId,imageUrl, createdAt, updatedAt);
                         categoryList.add(category);
                         docIdList.add(doc.getId());
                     }
@@ -132,13 +131,12 @@ public class AdminCategoryActivity extends AppCompatActivity implements OnCatego
                     for (DocumentSnapshot doc : queryDocumentSnapshots) {
                         String name = doc.getString("name");
                         String parentId = doc.getString("parent_id");
-                        Timestamp createdTimestamp = doc.getTimestamp("created_at");
-                        Timestamp updatedTimestamp = doc.getTimestamp("updated_at");
+                        String imageUrl = doc.getString("imageUrl");
 
-                        String createdAt = formatTimestamp(createdTimestamp);
-                        String updatedAt = formatTimestamp(updatedTimestamp);
+                        Timestamp createdAt = doc.getTimestamp("created_at");
+                        Timestamp updatedAt = doc.getTimestamp("updated_at");
 
-                        Category category = new Category(name, parentId, createdAt, updatedAt);
+                        Category category = new Category(name, parentId,imageUrl, createdAt, updatedAt);
                         categoryList.add(category);
                         docIdList.add(doc.getId());
                     }

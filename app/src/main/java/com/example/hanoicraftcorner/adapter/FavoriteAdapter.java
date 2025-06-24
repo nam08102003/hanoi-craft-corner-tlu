@@ -17,7 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.hanoicraftcorner.R;
-import com.example.hanoicraftcorner.Model.FavoriteItem;
+import com.example.hanoicraftcorner.model.FavoriteItem;
 import java.util.List;
 
 public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.FavoriteViewHolder> {

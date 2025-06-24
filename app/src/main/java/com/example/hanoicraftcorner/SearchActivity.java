@@ -1,6 +1,7 @@
 package com.example.hanoicraftcorner;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -86,6 +87,15 @@ public class SearchActivity extends AppCompatActivity {
         setupSearchListener();
         loadAndDisplayRecentSearches();
         loadSuggestedProducts();
+
+        // Tự động focus và hiện bàn phím khi mở SearchActivity
+        etSearch.requestFocus();
+        etSearch.postDelayed(() -> {
+            android.view.inputmethod.InputMethodManager imm = (android.view.inputmethod.InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            if (imm != null) {
+                imm.showSoftInput(etSearch, android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT);
+            }
+        }, 100);
     }
 
     private void setupInitialView() {
@@ -108,7 +118,9 @@ public class SearchActivity extends AppCompatActivity {
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 String query = etSearch.getText().toString().trim();
                 if (!query.isEmpty()) {
-                    performSearch(query);
+                    Intent intent = new Intent(SearchActivity.this, SearchResultActivity.class);
+                    intent.putExtra("keyword", query);
+                    startActivity(intent);
                 }
                 return true;
             }
@@ -118,7 +130,9 @@ public class SearchActivity extends AppCompatActivity {
         ivSearchIcon.setOnClickListener(v -> {
             String query = etSearch.getText().toString().trim();
             if (!query.isEmpty()) {
-                performSearch(query);
+                Intent intent = new Intent(SearchActivity.this, SearchResultActivity.class);
+                intent.putExtra("keyword", query);
+                startActivity(intent);
             }
         });
     }
@@ -127,40 +141,47 @@ public class SearchActivity extends AppCompatActivity {
         Toast.makeText(this, "Đang tìm kiếm: " + query, Toast.LENGTH_SHORT).show();
         saveSearchQuery(query);
 
-        // Hide initial view and show search view
         initialSearchView.setVisibility(View.GONE);
         tvNoResults.setVisibility(View.GONE);
         rvSearchResults.setVisibility(View.GONE);
 
-        // Firestore does not support case-insensitive "contains" queries natively.
-        // This query finds documents where the 'name' field starts with the query string.
         db.collection("products")
-                .orderBy("name")
-                .startAt(query)
-                .endAt(query + "\uf8ff")
-                .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        searchResultsList.clear();
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            Product product = document.toObject(Product.class);
-                            searchResultsList.add(product);
+            .get()
+            .addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    searchResultsList.clear();
+                    List<Product> exactMatch = new ArrayList<>();
+                    List<Product> similarMatch = new ArrayList<>();
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        Product product = document.toObject(Product.class);
+                        String name = product.getName();
+                        if (name == null) continue; // Bỏ qua sản phẩm không có tên
+                        name = name.toLowerCase();
+                        String q = query.toLowerCase();
+                        if (name.equals(q)) {
+                            exactMatch.add(product);
+                        } else if (name.contains(q)) {
+                            similarMatch.add(product);
                         }
+                    }
+                    // Sản phẩm chính lên đầu, tương tự phía sau
+                    searchResultsList.addAll(exactMatch);
+                    searchResultsList.addAll(similarMatch);
 
-                        if (searchResultsList.isEmpty()) {
-                            tvNoResults.setVisibility(View.VISIBLE);
-                            rvSearchResults.setVisibility(View.GONE);
-                        } else {
-                            searchResultsAdapter.notifyDataSetChanged();
-                            tvNoResults.setVisibility(View.GONE);
-                            rvSearchResults.setVisibility(View.VISIBLE);
-                        }
-                    } else {
-                        Log.w("Firestore", "Error getting documents.", task.getException());
+                    if (searchResultsList.isEmpty()) {
                         tvNoResults.setVisibility(View.VISIBLE);
                         rvSearchResults.setVisibility(View.GONE);
+                    } else {
+                        searchResultsAdapter.notifyDataSetChanged();
+                        tvNoResults.setVisibility(View.GONE);
+                        rvSearchResults.setVisibility(View.VISIBLE);
                     }
-                });
+                } else {
+                    Log.w("Firestore", "Error getting documents.", task.getException());
+                    tvNoResults.setVisibility(View.VISIBLE);
+                    rvSearchResults.setVisibility(View.GONE);
+                }
+            });
     }
 
     private void saveSearchQuery(String query) {
@@ -195,9 +216,9 @@ public class SearchActivity extends AppCompatActivity {
                 chip.setCloseIconVisible(true);
 
                 chip.setOnClickListener(v -> {
-                    etSearch.setText(query);
-                    etSearch.setSelection(query.length());
-                    performSearch(query);
+                    Intent intent = new Intent(SearchActivity.this, SearchResultActivity.class);
+                    intent.putExtra("keyword", query);
+                    startActivity(intent);
                 });
 
                 chip.setOnCloseIconClickListener(v -> removeSearchQuery(query));

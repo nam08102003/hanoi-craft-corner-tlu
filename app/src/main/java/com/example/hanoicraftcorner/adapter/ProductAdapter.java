@@ -42,9 +42,9 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         holder.priceTextView.setText(format.format(product.getPrice()));
 
         // Load image using Glide, use the first image from the list
-        if (product.getImageUrls() != null && !product.getImageUrls().isEmpty()) {
+        if (product.getImages() != null && !product.getImages().isEmpty()) {
             Glide.with(context)
-                    .load(product.getImageUrls().get(0))
+                    .load(product.getImages().get(0))
                     .placeholder(R.drawable.ic_placeholder_default)
                     .into(holder.imageView);
         } else {

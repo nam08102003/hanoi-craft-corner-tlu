@@ -9,6 +9,7 @@ android {
 
     buildFeatures {
         buildConfig = true
+        viewBinding = true
     }
 
     defaultConfig {
@@ -57,11 +58,9 @@ dependencies {
     implementation(libs.firebase.database)
     implementation(libs.firebase.firestore)
     implementation(libs.firebase.storage)
-    implementation(libs.litert.support.api)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
-    androidTestImplementation(libs.rules)
 
 //    Firebase
     implementation(platform(libs.firebase.bom.v33150))
@@ -73,6 +72,8 @@ dependencies {
     implementation(libs.android.activation)
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.analytics)
+
+    implementation("de.hdodenhof:circleimageview:3.1.0")
 
     implementation(libs.okhttp)
     implementation(libs.glide)

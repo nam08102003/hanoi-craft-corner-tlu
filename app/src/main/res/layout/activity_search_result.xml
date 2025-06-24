@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white">
+
+    <!-- Top Bar -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="12dp">
+
+        <ImageView
+            android:id="@+id/iv_back"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:padding="8dp"
+            android:src="@drawable/ic_back" />
+
+        <EditText
+            android:id="@+id/et_search"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_toEndOf="@id/iv_back"
+            android:layout_toStartOf="@+id/iv_search_icon"
+            android:background="@drawable/search_bar_background"
+            android:hint="Tìm kiếm..."
+            android:imeOptions="actionSearch"
+            android:inputType="text"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="48dp"
+            android:layout_marginEnd="56dp"/>
+
+        <ImageView
+            android:id="@+id/iv_search_icon"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentEnd="true"
+            android:padding="8dp"
+            android:src="@android:drawable/ic_menu_search" />
+    </RelativeLayout>
+
+    <!-- Shop highlight -->
+    <LinearLayout
+        android:id="@+id/layout_shop_highlight"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="12dp"
+        android:gravity="center_vertical"
+        android:visibility="gone">
+        <TextView
+            android:id="@+id/tv_shop_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Gốm sứ Minh Dương"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:background="@drawable/bg_btn_cancel"
+            android:padding="8dp"
+            android:drawableStart="@drawable/ic_shop"
+            android:drawablePadding="8dp"/>
+        <Button
+            android:id="@+id/btn_view_shop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Xem shop"
+            android:background="@drawable/bg_btn_cancel"
+            android:textColor="@color/black"
+            android:layout_marginStart="12dp"/>
+    </LinearLayout>
+
+    <!-- Filter Chips -->
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingVertical="8dp">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <Button android:id="@+id/chip_type" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Loại" style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
+            <Button android:id="@+id/chip_supplier" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Nhà cung cấp" style="@style/Widget.MaterialComponents.Button.OutlinedButton" android:layout_marginStart="8dp"/>
+            <Button android:id="@+id/chip_price" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Giá" style="@style/Widget.MaterialComponents.Button.OutlinedButton" android:layout_marginStart="8dp"/>
+            <Button android:id="@+id/chip_sort" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Sắp xếp" style="@style/Widget.MaterialComponents.Button.OutlinedButton" android:layout_marginStart="8dp"/>
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <TextView
+        android:id="@+id/tv_related_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Sản phẩm liên quan"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:paddingStart="16dp"
+        android:paddingTop="8dp"
+        android:textSize="16sp"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_search_results"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="8dp"
+        android:clipToPadding="false"/>
+
+    <Button
+        android:id="@+id/btn_see_more"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Xem thêm"
+        android:background="@android:color/transparent"
+        android:textColor="#9775FA"
+        android:textStyle="bold"
+        android:layout_margin="8dp"/>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavigationView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:menu="@menu/bottom_nav_menu_user"
+        app:itemIconTint="@color/bottom_nav_icon_color"
+        app:itemTextColor="@color/bottom_nav_icon_color"
+        app:labelVisibilityMode="labeled"
+        app:itemRippleColor="@android:color/transparent"
+        app:itemActiveIndicatorStyle="@style/Widget.Material3.BottomNavigationView.ActiveIndicator"/>
+
+</LinearLayout> 
