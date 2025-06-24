@@ -46,7 +46,15 @@ public class FavoriteActivity extends AppCompatActivity {
         rvFavorites = findViewById(R.id.rv_favorites);
         rvFavorites.setLayoutManager(new LinearLayoutManager(this));
         favoriteList = new ArrayList<>();
-        favoriteAdapter = new FavoriteAdapter(this, favoriteList);
+        favoriteAdapter = new FavoriteAdapter(favoriteList, new FavoriteAdapter.OnItemClickListener() {
+            @Override
+            public void onRemoveClick(int position) {
+            }
+
+            @Override
+            public void onDetailsClick(FavoriteItem item) {
+            }
+        });
         rvFavorites.setAdapter(favoriteAdapter);
 
         loadFavoriteItems();

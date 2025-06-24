@@ -1,5 +1,6 @@
 package com.example.hanoicraftcorner.model;
 
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.ServerTimestamp;
 
 import java.util.Date;
@@ -9,15 +10,17 @@ public class Category {
     private String name;
     private String parentId;
     @ServerTimestamp
-    private Date createdAt;
-    private String updatedAt;
+    private Timestamp createdAt;
+    @ServerTimestamp
+    private Timestamp updatedAt;
     private String imageUrl; // I'll add a sample image URL field
 
-    public Category(String name, String parentId, Date createdAt, String updatedAt) {
+    public Category(String name, String parentId, String imageUrl, Timestamp createdAt, Timestamp updatedAt) {
         this.name = name;
         this.parentId = parentId;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+        this.imageUrl = imageUrl;
     }
 
     public Category() {
@@ -49,7 +52,7 @@ public class Category {
         this.parentId = parentId;
     }
 
-    public String getUpdatedAt() {
+    public Timestamp getUpdatedAt() {
         return updatedAt;
     }
 
@@ -57,7 +60,7 @@ public class Category {
         return imageUrl;
     }
 
-    public void setUpdatedAt(String updatedAt) {
+    public void setUpdatedAt(Timestamp updatedAt) {
         this.updatedAt = updatedAt;
     }
 
@@ -65,11 +68,11 @@ public class Category {
         this.imageUrl = imageUrl;
     }
 
-    public Date getCreatedAt() {
+    public Timestamp getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Date createdAt) {
+    public void setCreatedAt(Timestamp createdAt) {
         this.createdAt = createdAt;
     }
 }

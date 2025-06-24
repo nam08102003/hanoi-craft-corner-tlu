@@ -9,6 +9,7 @@ android {
 
     buildFeatures {
         buildConfig = true
+        viewBinding = true
     }
 
     defaultConfig {
@@ -73,6 +74,8 @@ dependencies {
     implementation(libs.android.activation)
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.analytics)
+
+    implementation("de.hdodenhof:circleimageview:3.1.0")
 
     implementation(libs.okhttp)
     implementation(libs.glide)
