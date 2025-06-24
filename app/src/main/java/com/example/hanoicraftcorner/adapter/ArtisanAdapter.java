@@ -39,16 +39,22 @@ public class ArtisanAdapter extends RecyclerView.Adapter<ArtisanAdapter.ArtisanV
     public void onBindViewHolder(@NonNull ArtisanViewHolder holder, int position) {
         Artisan artisan = artisanList.get(position);
         holder.nameTextView.setText(artisan.getName());
-        String intro = "• " + artisan.getCraft_type() + "\n" + artisan.getIntroduce();
-        holder.introTextView.setText(intro);
-
-        Glide.with(context)
-                .load(artisan.getImageUrl())
-                .placeholder(R.drawable.ic_placeholder_default)
-                .into(holder.imageView);
-
+        // Show brand name if available, else show name
+        String brandOrName = artisan.getBrand_name() != null && !artisan.getBrand_name().isEmpty() ? artisan.getBrand_name() : artisan.getName();
+        holder.nameTextView.setText(brandOrName);
+        // Show introduce
+        holder.introTextView.setText(artisan.getIntroduce());
+        // Load avatar image if available
+        if (artisan.getAvatar() != null && !artisan.getAvatar().isEmpty()) {
+            Glide.with(context)
+                    .load(artisan.getAvatar())
+                    .placeholder(R.drawable.ic_placeholder_default)
+                    .into(holder.imageView);
+        } else {
+            holder.imageView.setImageResource(R.drawable.ic_placeholder_default);
+        }
         holder.storeButton.setOnClickListener(v -> {
-            Toast.makeText(context, "Mở cửa hàng của " + artisan.getName(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Mở cửa hàng của " + brandOrName, Toast.LENGTH_SHORT).show();
             // TODO: Chuyển sang màn hình cửa hàng của nghệ nhân
         });
     }
@@ -72,4 +78,4 @@ public class ArtisanAdapter extends RecyclerView.Adapter<ArtisanAdapter.ArtisanV
             storeButton = itemView.findViewById(R.id.btn_go_to_store);
         }
     }
-} 
+}

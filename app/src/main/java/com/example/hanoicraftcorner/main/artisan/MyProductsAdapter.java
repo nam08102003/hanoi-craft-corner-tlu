@@ -1,5 +1,6 @@
 package com.example.hanoicraftcorner.main.artisan;
 
+import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,8 +56,7 @@ public class MyProductsAdapter extends RecyclerView.Adapter<MyProductsAdapter.Pr
 
     public static class ProductViewHolder extends RecyclerView.ViewHolder {
         private final ImageView image;
-        private final TextView name, quantity, price;
-        private final View layoutEdit, layoutDelete;
+        private final TextView name, quantity, price, edit, delete;
 
         public ProductViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -64,14 +64,15 @@ public class MyProductsAdapter extends RecyclerView.Adapter<MyProductsAdapter.Pr
             name = itemView.findViewById(R.id.text_product_name);
             quantity = itemView.findViewById(R.id.text_product_quantity);
             price = itemView.findViewById(R.id.text_product_price);
-            layoutEdit = itemView.findViewById(R.id.layout_edit);
-            layoutDelete = itemView.findViewById(R.id.layout_delete);
+            edit = itemView.findViewById(R.id.text_edit);
+            delete = itemView.findViewById(R.id.text_delete);
         }
 
+        @SuppressLint("SetTextI18n")
         public void bind(DocumentSnapshot product, OnProductActionListener listener) {
-            name.setText(product.getString("Name"));
-            quantity.setText("Số lượng: " + (product.getString("Quantity") != null ? product.getString("Quantity") : "0"));
-            String priceValue = product.getString("Price");
+            name.setText(product.getString("name"));
+            quantity.setText("Số lượng: " + (product.getString("quantity") != null ? product.getString("quantity") : "0"));
+            String priceValue = product.getString("price");
             if (priceValue != null) {
                 try {
                     long priceLong = Long.parseLong(priceValue.replace(".", ""));
@@ -83,7 +84,9 @@ public class MyProductsAdapter extends RecyclerView.Adapter<MyProductsAdapter.Pr
             } else {
                 price.setText("Giá: 0₫");
             }
-            String imageUrl = product.getString("Image");
+            // Lấy danh sách ảnh, lấy ảnh đầu tiên nếu có
+            java.util.List<String> images = (java.util.List<String>) product.get("images");
+            String imageUrl = (images != null && !images.isEmpty()) ? images.get(0) : null;
             if (imageUrl != null && !imageUrl.isEmpty()) {
                 Glide.with(image.getContext())
                         .load(imageUrl)
@@ -92,8 +95,8 @@ public class MyProductsAdapter extends RecyclerView.Adapter<MyProductsAdapter.Pr
             } else {
                 image.setImageResource(R.drawable.ic_launcher_foreground);
             }
-            layoutEdit.setOnClickListener(v -> listener.onEdit(product));
-            layoutDelete.setOnClickListener(v -> listener.onDelete(product));
+            edit.setOnClickListener(v -> listener.onEdit(product));
+            delete.setOnClickListener(v -> listener.onDelete(product));
         }
     }
 }
