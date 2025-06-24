@@ -25,7 +25,6 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-
         logIn = findViewById(R.id.btn_login);
         regisArtisan = findViewById(R.id.btn_regis_artisan);
         email = findViewById(R.id.email_login);
@@ -34,10 +33,10 @@ public class LoginActivity extends AppCompatActivity {
         forgotPassword = findViewById(R.id.forgot_password);
         auth = FirebaseAuth.getInstance();
 
-        // Prefill email if available from Intent extra
-        String prefillEmail = getIntent().getStringExtra("email");
-        if (prefillEmail != null) {
-            email.setText(prefillEmail);
+        // prefill user_id if available from intent extra
+        String prefillUserId = getIntent().getStringExtra("user_id");
+        if (prefillUserId != null) {
+            email.setText(prefillUserId);
         }
 
         logIn.setOnClickListener(v -> logInUser());
@@ -85,20 +84,21 @@ public class LoginActivity extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         com.google.firebase.firestore.FirebaseFirestore db = com.google.firebase.firestore.FirebaseFirestore.getInstance();
                         db.collection("users")
-                                .whereEqualTo("Email", emailText)
+                                .whereEqualTo("email", emailText)
                                 .get()
                                 .addOnSuccessListener(queryDocumentSnapshots -> {
                                     if (!queryDocumentSnapshots.isEmpty()) {
                                         com.google.firebase.firestore.DocumentSnapshot userDoc = queryDocumentSnapshots.getDocuments().get(0);
-                                        String profileType = userDoc.getString("Profiletype");
+                                        String profileType = userDoc.getString("role");
                                         if (profileType == null) profileType = "user";
+                                        String userId = userDoc.getId();
                                         Intent intent;
-                                        if ("Seller".equals(profileType)) {
+                                        if ("artisan".equals(profileType)) {
                                             intent = new Intent(LoginActivity.this, MainBoardArtisan.class);
-                                            intent.putExtra("email", emailText);
+                                            intent.putExtra("user_id", userId);
                                         } else {
                                             intent = new Intent(LoginActivity.this, com.example.hanoicraftcorner.main.MainActivity.class);
-                                            intent.putExtra("email", emailText);
+                                            intent.putExtra("user_id", userId);
                                         }
                                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                         startActivity(intent);

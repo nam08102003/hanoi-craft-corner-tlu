@@ -70,9 +70,9 @@ public class MyProductsAdapter extends RecyclerView.Adapter<MyProductsAdapter.Pr
 
         @SuppressLint("SetTextI18n")
         public void bind(DocumentSnapshot product, OnProductActionListener listener) {
-            name.setText(product.getString("Name"));
-            quantity.setText("Số lượng: " + (product.getString("Quantity") != null ? product.getString("Quantity") : "0"));
-            String priceValue = product.getString("Price");
+            name.setText(product.getString("name"));
+            quantity.setText("Số lượng: " + (product.getString("quantity") != null ? product.getString("quantity") : "0"));
+            String priceValue = product.getString("price");
             if (priceValue != null) {
                 try {
                     long priceLong = Long.parseLong(priceValue.replace(".", ""));
@@ -84,7 +84,9 @@ public class MyProductsAdapter extends RecyclerView.Adapter<MyProductsAdapter.Pr
             } else {
                 price.setText("Giá: 0₫");
             }
-            String imageUrl = product.getString("Image");
+            // Lấy danh sách ảnh, lấy ảnh đầu tiên nếu có
+            java.util.List<String> images = (java.util.List<String>) product.get("images");
+            String imageUrl = (images != null && !images.isEmpty()) ? images.get(0) : null;
             if (imageUrl != null && !imageUrl.isEmpty()) {
                 Glide.with(image.getContext())
                         .load(imageUrl)

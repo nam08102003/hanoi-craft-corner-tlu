@@ -67,157 +67,167 @@
 
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/fieldsContainer"
-        android:layout_width="402dp"
-        android:layout_height="483dp"
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="592dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="32dp"
         android:layout_marginEnd="16dp"
-        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/addProductButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addPic">
+        app:layout_constraintTop_toBottomOf="@+id/addPic"
+        app:layout_constraintVertical_bias="0.0">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/product_name" />
-
-        <EditText
-            android:id="@+id/editTextProductName"
+        <LinearLayout
+            android:id="@+id/fieldsContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="35dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="35dp"
-            android:background="@drawable/edittext_background"
-            android:elevation="3dp"
-            android:paddingVertical="18dp"
-            android:paddingStart="16dp"
-            android:paddingEnd="32dp"
-            android:textColor="@color/black"
-            android:textSize="12sp"
-            android:textStyle="bold"
-            android:autofillHints="username"
-            android:hint="@string/product_name"
-            android:inputType="text"
-            />
+            android:orientation="vertical">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/introduce_label" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/product_name"
+                android:textSize="16sp" />
 
-        <EditText
-            android:id="@+id/editTextDescription"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="35dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="35dp"
-            android:background="@drawable/edittext_background"
-            android:elevation="3dp"
-            android:gravity="top|start"
-            android:lines="3"
-            android:maxLines="3"
-            android:paddingVertical="18dp"
-            android:paddingStart="16dp"
-            android:paddingEnd="32dp"
-            android:textColor="@color/black"
-            android:textSize="12sp"
-            android:textStyle="bold"
-            android:autofillHints="username"
-            android:hint="@string/introduce_label"
-            android:inputType="text"
-            />
+            <EditText
+                android:id="@+id/editTextProductName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="35dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="35dp"
+                android:layout_marginBottom="16dp"
+                android:autofillHints="username"
+                android:background="@drawable/edittext_background"
+                android:elevation="3dp"
+                android:inputType="text"
+                android:paddingVertical="18dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="32dp"
+                android:textColor="@color/black"
+                android:textSize="12sp"
+                android:textStyle="bold" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/product_price" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Mô tả sản phẩm"
+                android:textSize="16sp" />
 
-        <EditText
-            android:id="@+id/editTextPrice"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="35dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="35dp"
-            android:background="@drawable/edittext_background"
-            android:elevation="3dp"
-            android:inputType="numberDecimal"
-            android:paddingVertical="18dp"
-            android:paddingStart="16dp"
-            android:paddingEnd="32dp"
-            android:textColor="@color/black"
-            android:textSize="12sp"
-            android:textStyle="bold"
-            android:autofillHints="username"
-            android:hint="@string/product_price"
-            />
+            <EditText
+                android:id="@+id/editTextDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="35dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="35dp"
+                android:layout_marginBottom="16dp"
+                android:autofillHints="username"
+                android:background="@drawable/edittext_background"
+                android:elevation="3dp"
+                android:gravity="top|start"
+                android:inputType="text"
+                android:lines="3"
+                android:maxLines="3"
+                android:paddingVertical="18dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="32dp"
+                android:textColor="@color/black"
+                android:textSize="12sp"
+                android:textStyle="bold" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/category_title" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/product_price"
+                android:textSize="16sp" />
 
-        <AutoCompleteTextView
-            android:id="@+id/editTextCategory"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="35dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="35dp"
-            android:background="@drawable/edittext_background"
-            android:elevation="3dp"
-            android:paddingVertical="18dp"
-            android:paddingStart="16dp"
-            android:paddingEnd="32dp"
-            android:textColor="@color/black"
-            android:textSize="12sp"
-            android:textStyle="bold"
-            android:hint="@string/category_title"
-            />
+            <EditText
+                android:id="@+id/editTextPrice"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="35dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="35dp"
+                android:layout_marginBottom="16dp"
+                android:autofillHints="username"
+                android:background="@drawable/edittext_background"
+                android:elevation="3dp"
+                android:inputType="numberDecimal"
+                android:paddingVertical="18dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="32dp"
+                android:textColor="@color/black"
+                android:textSize="12sp"
+                android:textStyle="bold" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/product_quantity" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/category_title"
+                android:textSize="16sp" />
 
-        <EditText
-            android:id="@+id/editTextQuantity"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="35dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="35dp"
-            android:background="@drawable/edittext_background"
-            android:elevation="3dp"
-            android:inputType="number"
-            android:paddingVertical="18dp"
-            android:paddingStart="16dp"
-            android:paddingEnd="32dp"
-            android:textColor="@color/black"
-            android:textSize="12sp"
-            android:textStyle="bold"
-            android:autofillHints="username"
-            android:hint="@string/product_quantity"
-            />
-    </LinearLayout>
+            <AutoCompleteTextView
+                android:id="@+id/editTextCategory"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="35dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="35dp"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/edittext_background"
+                android:contentDescription="Chọn danh mục sản phẩm"
+                android:elevation="3dp"
+                android:paddingVertical="18dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="32dp"
+                android:textColor="@color/black"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/product_quantity"
+                android:textSize="16sp" />
+
+            <EditText
+                android:id="@+id/editTextQuantity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="35dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="35dp"
+                android:layout_marginBottom="16dp"
+                android:autofillHints="username"
+                android:background="@drawable/edittext_background"
+                android:elevation="3dp"
+                android:inputType="number"
+                android:paddingVertical="18dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="32dp"
+                android:textColor="@color/black"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </ScrollView>
 
     <Button
         android:id="@+id/addProductButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="33dp"
-        android:layout_marginTop="16dp"
         android:layout_marginEnd="33dp"
+        android:layout_marginBottom="96dp"
         android:backgroundTint="@color/btnColorPurple"
         android:text="@string/save"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/fieldsContainer" />
+        tools:ignore="TextContrastCheck" />
 
     <ImageView
         android:id="@+id/productImageView"

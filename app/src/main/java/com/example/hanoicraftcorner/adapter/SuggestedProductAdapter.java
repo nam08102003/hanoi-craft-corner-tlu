@@ -36,9 +36,10 @@ public class SuggestedProductAdapter extends RecyclerView.Adapter<SuggestedProdu
     @Override
     public void onBindViewHolder(@NonNull SuggestedProductViewHolder holder, int position) {
         Product product = productList.get(position);
-        if (product.getImageUrls() != null && !product.getImageUrls().isEmpty()) {
+        // Use getImages() instead of getImageUrls()
+        if (product.getImages() != null && !product.getImages().isEmpty()) {
             Glide.with(context)
-                    .load(product.getImageUrls().get(0))
+                    .load(product.getImages().get(0))
                     .placeholder(R.drawable.ic_placeholder_default)
                     .into(holder.imageView);
         }
@@ -62,4 +63,4 @@ public class SuggestedProductAdapter extends RecyclerView.Adapter<SuggestedProdu
             imageView = itemView.findViewById(R.id.image_suggested_product);
         }
     }
-} 
+}

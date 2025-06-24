@@ -71,14 +71,14 @@ public class RegisterArtisan extends AppCompatActivity {
                     int count = Math.min(data.getClipData().getItemCount(), maxSelectable);
                     for (int i = 0; i < count && currentCount + i < 3; i++) {
                         Uri uri = data.getClipData().getItemAt(i).getUri();
-                        grantUriPermission(uri);
+                        grantUriPermission(getPackageName(), uri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
                         String type = defaultTypes[currentCount + i];
                         imageItems.add(new ImageItem(uri, type));
                         imageAdapter.notifyItemInserted(imageItems.size() - 1);
                     }
                 } else if (data.getData() != null && currentCount < 3) {
                     Uri uri = data.getData();
-                    grantUriPermission(uri);
+                    grantUriPermission(getPackageName(), uri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
                     String type = defaultTypes[currentCount];
                     imageItems.add(new ImageItem(uri, type));
                     imageAdapter.notifyItemInserted(imageItems.size() - 1);
@@ -276,22 +276,26 @@ public class RegisterArtisan extends AppCompatActivity {
                             return;
                         }
                         FirebaseFirestore db = FirebaseFirestore.getInstance();
-                        Map<String, Object> user = new HashMap<>();
-                        user.put("Username", usernameStr);
-                        user.put("Email", emailStr);
-                        user.put("Profiletype", "Seller");
-                        user.put("Role", "artisan");
-                        db.collection("users")
-                            .document(userId)
-                            .set(user)
-                            .addOnSuccessListener(aVoid -> uploadImagesAndSaveInfo(storeOrBrand, phoneStr, introduceStr, db,
-                                    () -> {
-                                        frameRegister.setVisibility(View.GONE);
-                                        frameSuccess.setVisibility(View.VISIBLE);
-                                    },
-                                    () -> Toast.makeText(this, "Đăng ký thất bại khi upload ảnh/thông tin!", Toast.LENGTH_SHORT).show()
-                            ))
-                            .addOnFailureListener(e -> Toast.makeText(this, "Đăng ký thất bại!", Toast.LENGTH_SHORT).show());
+                        // Prepare artisan info according to Artisan.java
+                        Map<String, Object> artisan = new HashMap<>();
+                        artisan.put("email", emailStr);
+                        artisan.put("name", usernameStr);
+                        artisan.put("role", "artisan");
+                        artisan.put("avatar", ""); // Set default or empty
+                        artisan.put("background", ""); // Set default or empty
+                        artisan.put("phone", phoneStr);
+                        artisan.put("introduce", introduceStr);
+                        artisan.put("brand_name", storeOrBrand);
+                        artisan.put("status", "Pending");
+                        artisan.put("created_at", com.google.firebase.firestore.FieldValue.serverTimestamp());
+                        artisan.put("updated_at", com.google.firebase.firestore.FieldValue.serverTimestamp());
+                        // Upload images and save artisan info
+                        uploadImagesAndSaveInfo(db, artisan, () -> {
+                                frameRegister.setVisibility(View.GONE);
+                                frameSuccess.setVisibility(View.VISIBLE);
+                            },
+                            () -> Toast.makeText(this, "Đăng ký thất bại khi upload ảnh/thông tin!", Toast.LENGTH_SHORT).show()
+                        );
                     } else {
                         Exception e = task.getException();
                         if (e != null && e.getClass().getSimpleName().equals("FirebaseAuthUserCollisionException")) {
@@ -330,109 +334,71 @@ public class RegisterArtisan extends AppCompatActivity {
         }
         return null;
     }
-    private void uploadImagesAndSaveInfo(String storeOrBrand, String phone, String introduce, FirebaseFirestore db, Runnable onSuccess, Runnable onFailure) {
+    private void uploadImagesAndSaveInfo(FirebaseFirestore db, Map<String, Object> artisan, Runnable onSuccess, Runnable onFailure) {
         new Thread(() -> {
-            try {
-                Map<String, String> imageUrls = new HashMap<>();
-                int total = imageItems.size();
-                int[] uploaded = {0};
-                boolean[] failed = {false};
-                Object lock = new Object();
-                for (ImageItem item : imageItems) {
-                    try {
-                        String filePath = item.getUri() != null ? item.getUri().getPath() : null;
-                        File file = filePath != null ? new File(filePath) : null;
-                        if (file != null && file.exists() && file.canRead()) {
-                            CloudinaryUploader.uploadImage(file, new CloudinaryUploader.UploadCallback() {
-                                @Override
-                                public void onSuccess(String imageUrl) {
-                                    synchronized (lock) {
-                                        imageUrls.put(item.getType(), imageUrl);
-                                        uploaded[0]++;
-                                        if (uploaded[0] == total && !failed[0]) {
-                                            saveArtisanInfo(storeOrBrand, phone, introduce, db, imageUrls, onSuccess, onFailure);
-                                        }
-                                    }
+            List<String> imageUrls = new ArrayList<>();
+            int total = imageItems.size();
+            int[] uploaded = {0};
+            boolean[] failed = {false};
+            Object lock = new Object();
+            for (ImageItem item : imageItems) {
+                try {
+                    InputStream inputStream = getContentResolver().openInputStream(item.getUri());
+                    String fileName = "image_" + System.currentTimeMillis() + ".jpg";
+                    CloudinaryUploader.uploadImage(inputStream, fileName, new CloudinaryUploader.UploadCallback() {
+                        @Override
+                        public void onSuccess(String imageUrl) {
+                            synchronized (lock) {
+                                imageUrls.add(imageUrl);
+                                uploaded[0]++;
+                                if (uploaded[0] == total && !failed[0]) {
+                                    artisan.put("images", imageUrls);
+                                    runOnUiThread(() -> saveArtisanInfo(db, artisan, onSuccess, onFailure));
                                 }
-                                @Override
-                                public void onFailure(Exception e) {
-                                    synchronized (lock) {
-                                        failed[0] = true;
-                                        runOnUiThread(onFailure);
-                                    }
-                                }
-                            });
-                        } else {
-                            InputStream inputStream = getContentResolver().openInputStream(item.getUri());
-                            String fileName = "image_" + System.currentTimeMillis() + ".jpg";
-                            CloudinaryUploader.uploadImage(inputStream, fileName, new CloudinaryUploader.UploadCallback() {
-                                @Override
-                                public void onSuccess(String imageUrl) {
-                                    synchronized (lock) {
-                                        imageUrls.put(item.getType(), imageUrl);
-                                        uploaded[0]++;
-                                        if (uploaded[0] == total && !failed[0]) {
-                                            saveArtisanInfo(storeOrBrand, phone, introduce, db, imageUrls, onSuccess, onFailure);
-                                        }
-                                    }
-                                }
-                                @Override
-                                public void onFailure(Exception e) {
-                                    synchronized (lock) {
-                                        failed[0] = true;
-                                        runOnUiThread(onFailure);
-                                    }
-                                }
-                            });
+                            }
                         }
-                    } catch (Exception e) {
-                        synchronized (lock) {
-                            failed[0] = true;
-                            runOnUiThread(onFailure);
+                        @Override
+                        public void onFailure(Exception e) {
+                            synchronized (lock) {
+                                failed[0] = true;
+                                runOnUiThread(onFailure);
+                            }
                         }
+                    });
+                } catch (Exception e) {
+                    synchronized (lock) {
+                        failed[0] = true;
+                        runOnUiThread(onFailure);
                     }
                 }
-            } catch (Exception e) {
-                runOnUiThread(onFailure);
             }
         }).start();
     }
 
-    private void saveArtisanInfo(String storeOrBrand, String phone, String introduce, FirebaseFirestore db, Map<String, String> imageUrls, Runnable onSuccess, Runnable onFailure) {
-        Map<String, Object> artisanInfo = new HashMap<>();
-        artisanInfo.put("StoreOrBrand", storeOrBrand);
-        artisanInfo.put("Phone", phone);
-        artisanInfo.put("Introduce", introduce);
-        artisanInfo.put("Images", imageUrls);
-        artisanInfo.put("Status", "Pending");
+    private void saveArtisanInfo(FirebaseFirestore db, Map<String, Object> artisan, Runnable onSuccess, Runnable onFailure) {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         String userId = currentUser != null ? currentUser.getUid() : null;
         if (userId == null) {
             runOnUiThread(onFailure);
             return;
         }
-        db.collection("users").document(userId).update(artisanInfo)
+        db.collection("users").document(userId).set(artisan)
             .addOnSuccessListener(aVoid -> runOnUiThread(onSuccess))
             .addOnFailureListener(e -> runOnUiThread(onFailure));
-    }
-
-    private void grantUriPermission(Uri uri) {
-        try {
-            grantUriPermission(getPackageName(), uri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        } catch (Exception ignored) {}
-    }
-
-    private Uri createImageUri() {
-        String imageName = "IMG_" + System.currentTimeMillis() + ".jpg";
-        java.io.File storageDir = getExternalFilesDir(android.os.Environment.DIRECTORY_PICTURES);
-        java.io.File image = new java.io.File(storageDir, imageName);
-        return androidx.core.content.FileProvider.getUriForFile(this, getPackageName() + ".fileprovider", image);
     }
 
     private void scanFileToGallery(Uri uri) {
         File file = new File(Objects.requireNonNull(uri.getPath()));
         MediaScannerConnection.scanFile(this, new String[]{file.getAbsolutePath()}, null, null);
     }
+
+    private Uri createImageUri() {
+        String imageName = "IMG_" + System.currentTimeMillis() + ".jpg";
+        File storageDir = getExternalFilesDir(android.os.Environment.DIRECTORY_PICTURES);
+        File image = new File(storageDir, imageName);
+        return androidx.core.content.FileProvider.getUriForFile(this, getPackageName() + ".fileprovider", image);
+    }
+
 
     private void launchCameraWithPermissionCheck() {
         if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {

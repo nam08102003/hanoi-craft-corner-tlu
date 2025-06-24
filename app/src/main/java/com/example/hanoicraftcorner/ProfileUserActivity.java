@@ -23,7 +23,6 @@ public class ProfileUserActivity extends AppCompatActivity {
     private FirebaseFirestore db;
     private FirebaseAuth mAuth;
     private static final String TAG = "ProfileUserActivity";
-    private static final String USER_ID = "user_002"; // ID để test
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,8 +33,16 @@ public class ProfileUserActivity extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
 
+        // Get user_id from intent
+        String userId = getIntent().getStringExtra("user_id");
+        if (userId == null) {
+            Toast.makeText(this, "Không tìm thấy user_id!", Toast.LENGTH_LONG).show();
+            finish();
+            return;
+        }
+        // Use userId for fetching user data
         setupToolbarAndProfileInfo();
-        fetchUserData();
+        fetchUserData(userId);
         setupOptionsClickListeners();
     }
 
@@ -45,22 +52,10 @@ public class ProfileUserActivity extends AppCompatActivity {
         binding.textUserNameTag.setText("Đang tải...");
     }
 
-    private void fetchUserData() {
-        // FirebaseUser firebaseUser = mAuth.getCurrentUser();
-        // if (firebaseUser == null) {
-        //     // Người dùng chưa đăng nhập
-        //     Log.w(TAG, "Người dùng chưa đăng nhập. Không thể tải thông tin.");
-        //     Toast.makeText(this, "Vui lòng đăng nhập để xem thông tin.", Toast.LENGTH_LONG).show();
-        //     binding.textUserNameTag.setText("Chưa đăng nhập");
-        //     // Có thể chuyển hướng về màn hình đăng nhập
-        //     // startActivity(new Intent(this, LoginActivity.class));
-        //     // finish();
-        //     return;
-        // }
-
-        // String userId = firebaseUser.getUid();
-        DocumentReference userRef = db.collection("users").document(USER_ID);
-        Log.d(TAG, "Đang lấy dữ liệu cho người dùng ID: " + USER_ID);
+    private void fetchUserData(String userId) {
+        // Fetch user data using userId
+        DocumentReference userRef = db.collection("users").document(userId);
+        Log.d(TAG, "Đang lấy dữ liệu cho người dùng ID: " + userId);
 
         userRef.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
@@ -86,8 +81,8 @@ public class ProfileUserActivity extends AppCompatActivity {
                         binding.textUserNameTag.setText("Lỗi dữ liệu model");
                     }
                 } else {
-                    Log.w(TAG, "Không tìm thấy document cho ID: " + USER_ID);
-                    Toast.makeText(this, "Không tìm thấy người dùng (ID: " + USER_ID + ")", Toast.LENGTH_SHORT).show();
+                    Log.w(TAG, "Không tìm thấy document cho ID: " + userId);
+                    Toast.makeText(this, "Không tìm thấy người dùng (ID: " + userId + ")", Toast.LENGTH_SHORT).show();
                     binding.textUserNameTag.setText("Không tìm thấy");
                 }
             } else {

@@ -83,8 +83,8 @@
     <string name="next_category">Danh mục tiếp</string>
     <string name="product_image">Ảnh sản phẩm</string>
     <string name="product_name">Tên sản phẩm</string>
-    <string name="product_quantity">Số lượng: 0</string>
-    <string name="product_price">Giá: 0đ</string>
+    <string name="product_quantity">Số lượng</string>
+    <string name="product_price">Giá</string>
     <string name="edit_product">Sửa</string>
     <string name="edit_product_content_desc">Sửa sản phẩm</string>
     <string name="delete_product">Xóa</string>

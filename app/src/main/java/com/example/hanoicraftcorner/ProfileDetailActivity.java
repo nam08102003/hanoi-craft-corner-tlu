@@ -34,6 +34,10 @@ public class ProfileDetailActivity extends AppCompatActivity {
 
         currentUser = (Profileuser) getIntent().getSerializableExtra("USER_DATA");
 
+        // Get user_id from intent if needed
+        String userId = getIntent().getStringExtra("user_id");
+        // Use userId to fetch user details if needed
+
         registerEditLauncher();
 
         if (currentUser != null) {

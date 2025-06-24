@@ -12,12 +12,11 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 
 import com.example.hanoicraftcorner.R;
+import com.example.hanoicraftcorner.model.Product;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import android.view.View;
 
 public class MainBoardArtisan extends AppCompatActivity {
-
-    private String email;
     private MyProductsAdapter myProductsAdapter;
     private FeaturedProductsAdapter featuredProductsAdapter;
     private ActivityResultLauncher<android.content.Intent> addProductLauncher;
@@ -28,11 +27,13 @@ public class MainBoardArtisan extends AppCompatActivity {
     private android.widget.Button[] btnCategories;
     private android.widget.ImageButton btnCategoryLeft, btnCategoryRight;
 
+    private String userId;
+
     @SuppressLint("NotifyDataSetChanged")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        email = getIntent().getStringExtra("email");
+        userId = getIntent().getStringExtra("user_id");
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main_board_artisan);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
@@ -74,7 +75,7 @@ public class MainBoardArtisan extends AppCompatActivity {
             new ActivityResultContracts.StartActivityForResult(), result -> {
                 if (result.getResultCode() == RESULT_OK) {
                     // Reload lại thông tin sản phẩm sau khi thêm sản phẩm
-                    reloadProductInfo(email);
+                    reloadProductInfo(userId);
                 }
             });
         // BottomNavigationView logic
@@ -106,7 +107,7 @@ public class MainBoardArtisan extends AppCompatActivity {
         // Thêm sự kiện click cho nút Thêm sản phẩm
         findViewById(R.id.btn_add_product).setOnClickListener(v -> {
             android.content.Intent intent = new android.content.Intent(MainBoardArtisan.this, AddProduct.class);
-            intent.putExtra("email", email);
+            intent.putExtra("user_id", userId);
             intent.putStringArrayListExtra("categories", new java.util.ArrayList<>(allCategories));
             addProductLauncher.launch(intent);
         });
@@ -121,7 +122,7 @@ public class MainBoardArtisan extends AppCompatActivity {
         // Thêm sự kiện click cho artisan_info để mở ArtisanInfo và truyền email
         findViewById(R.id.artisan_info).setOnClickListener(v -> {
             android.content.Intent intent = new android.content.Intent(MainBoardArtisan.this, ArtisanInfo.class);
-            intent.putExtra("email", email);
+            intent.putExtra("user_id", userId);
             startActivity(intent);
         });
 
@@ -193,19 +194,28 @@ public class MainBoardArtisan extends AppCompatActivity {
         });
 
         loadFeaturedArtisan();
+        loadMyFeaturedProduct();
+
+        // Thêm sự kiện click cho nút Thêm sản phẩm trong frame_menu
+        findViewById(R.id.btn_add_product).setOnClickListener(v -> {
+            android.content.Intent intent = new android.content.Intent(MainBoardArtisan.this, AddProduct.class);
+            intent.putExtra("user_id", userId);
+            intent.putStringArrayListExtra("categories", new java.util.ArrayList<>(allCategories));
+            addProductLauncher.launch(intent);
+        });
     }
 
     private void startEditProductActivity(com.google.firebase.firestore.DocumentSnapshot product) {
         android.content.Intent intent = new android.content.Intent(MainBoardArtisan.this, AddProduct.class);
         intent.putExtra("isEdit", true);
-        intent.putExtra("productId", product.getId());
-        intent.putExtra("Name", product.getString("Name"));
-        intent.putExtra("Quantity", product.getString("Quantity"));
-        intent.putExtra("Price", product.getString("Price"));
-        intent.putExtra("Image", product.getString("Image"));
-        intent.putExtra("Description", product.getString("Description"));
-        intent.putExtra("Category", product.getString("Category"));
-        intent.putExtra("email", email);
+        intent.putExtra("product_id", product.getId());
+        intent.putExtra("user_id", userId);
+        intent.putExtra("name", product.getString("name"));
+        intent.putExtra("quantity", product.getString("quantity"));
+        intent.putExtra("price", product.getString("price"));
+        intent.putExtra("image", product.getString("image"));
+        intent.putExtra("description", product.getString("description"));
+        intent.putExtra("category", product.getString("category"));
         intent.putStringArrayListExtra("categories", new java.util.ArrayList<>(allCategories));
         addProductLauncher.launch(intent);
     }
@@ -250,10 +260,10 @@ public class MainBoardArtisan extends AppCompatActivity {
     }
 
     // Hàm reloadProductInfo: chỉ dùng cho các thao tác thêm/xóa/sửa sản phẩm, cập nhật số lượng và trạng thái sản phẩm, không cập nhật sản phẩm nổi bật
-    private void reloadProductInfo(String email) {
+    private void reloadProductInfo(String userId) {
         com.google.firebase.firestore.FirebaseFirestore db = com.google.firebase.firestore.FirebaseFirestore.getInstance();
         db.collection("products")
-            .whereEqualTo("email", email)
+            .whereEqualTo("user_id", userId)
             .get()
             .addOnSuccessListener(productsSnapshot -> {
                 int productCount = productsSnapshot.size();
@@ -290,7 +300,7 @@ public class MainBoardArtisan extends AppCompatActivity {
     private void loadMyProducts() {
         com.google.firebase.firestore.FirebaseFirestore db = com.google.firebase.firestore.FirebaseFirestore.getInstance();
         db.collection("products")
-            .whereEqualTo("email", email)
+            .whereEqualTo("user_id", userId)
             .get()
             .addOnSuccessListener(productsSnapshot -> myProductsAdapter.setProducts(productsSnapshot.getDocuments()))
             .addOnFailureListener(e -> android.util.Log.e("MainBoardArtisan", "Lỗi truy vấn Products", e));
@@ -298,22 +308,17 @@ public class MainBoardArtisan extends AppCompatActivity {
 
     private void loadFeaturedProducts() {
         com.google.firebase.firestore.FirebaseFirestore db = com.google.firebase.firestore.FirebaseFirestore.getInstance();
-        java.util.List<java.util.Map<String, Object>> featuredList = new java.util.ArrayList<>();
+        java.util.List<Product> featuredList = new java.util.ArrayList<>();
         db.collection("products")
             .get()
             .addOnSuccessListener(productsSnap -> {
-                for (com.google.firebase.firestore.DocumentSnapshot product : productsSnap.getDocuments()) {
-                    String img = product.getString("Image");
-                    String name = product.getString("Name");
-                    String price = product.getString("Price");
-                    if (img != null && name != null && price != null) {
-                        java.util.Map<String, Object> map = new java.util.HashMap<>();
-                        map.put("Image", img);
-                        map.put("Name", name);
-                        map.put("Price", price);
-                        featuredList.add(map);
+                for (com.google.firebase.firestore.DocumentSnapshot productDoc : productsSnap.getDocuments()) {
+                    Product product = productDoc.toObject(Product.class);
+                    if (product != null) {
+                        featuredList.add(product);
                     }
                 }
+                // You may need to update your FeaturedProductsAdapter to accept List<Product>
                 featuredProductsAdapter.setProducts(featuredList);
             });
     }
@@ -321,15 +326,15 @@ public class MainBoardArtisan extends AppCompatActivity {
     private void loadFeaturedArtisan() {
         com.google.firebase.firestore.FirebaseFirestore db = com.google.firebase.firestore.FirebaseFirestore.getInstance();
         db.collection("users")
-            .whereEqualTo("Role", "artisan")
+            .whereEqualTo("hot", true)
             .limit(1)
             .get()
             .addOnSuccessListener(queryDocumentSnapshots -> {
                 if (!queryDocumentSnapshots.isEmpty()) {
                     com.google.firebase.firestore.DocumentSnapshot artisan = queryDocumentSnapshots.getDocuments().get(0);
-                    String name = artisan.getString("Username");
-                    String intro = artisan.getString("Introduce");
-                    String backgroundUrl = artisan.getString("Background");
+                    String name = artisan.getString("name");
+                    String intro = artisan.getString("introduce");
+                    String backgroundUrl = artisan.getString("background");
                     android.widget.TextView tvName = findViewById(R.id.tv_artisan_name);
                     android.widget.TextView tvIntro = findViewById(R.id.tv_artisan_intro);
                     android.widget.ImageView imgCover = findViewById(R.id.img_artisan_cover);
@@ -348,6 +353,61 @@ public class MainBoardArtisan extends AppCompatActivity {
             });
     }
 
+    // Hiển thị sản phẩm nổi bật của tôi vào linear_featured_1 và linear_featured_2 (nếu có)
+    private void loadMyFeaturedProduct() {
+        String currentUserId = com.google.firebase.auth.FirebaseAuth.getInstance().getCurrentUser() != null ? com.google.firebase.auth.FirebaseAuth.getInstance().getCurrentUser().getUid() : userId;
+        com.google.firebase.firestore.FirebaseFirestore.getInstance().collection("products")
+            .whereEqualTo("user_id", currentUserId)
+            .limit(2)
+            .get()
+            .addOnSuccessListener(queryDocumentSnapshots -> {
+                android.util.Log.d("FeaturedProduct", "Query size: " + queryDocumentSnapshots.size());
+                if (!queryDocumentSnapshots.isEmpty()) {
+                    // Sản phẩm 1
+                    com.example.hanoicraftcorner.model.Product product1 = queryDocumentSnapshots.getDocuments().get(0).toObject(com.example.hanoicraftcorner.model.Product.class);
+                    android.util.Log.d("FeaturedProduct", "Product 1: " + (product1 != null ? product1.getName() + ", images: " + product1.getImages() + ", desc: " + product1.getDescription() : "null"));
+                    if (product1 != null) {
+                        android.widget.ImageView imageView1 = findViewById(R.id.image_product_1);
+                        android.widget.TextView detailView1 = findViewById(R.id.image_product_detail_1);
+                        String imageUrl1 = (product1.getImages() != null && !product1.getImages().isEmpty()) ? product1.getImages().get(0) : null;
+                        if (imageView1 != null) {
+                            if (imageUrl1 != null && !imageUrl1.isEmpty()) {
+                                com.bumptech.glide.Glide.with(this).load(imageUrl1).placeholder(R.drawable.ic_launcher_foreground).into(imageView1);
+                            } else {
+                                imageView1.setImageResource(R.drawable.ic_launcher_foreground);
+                            }
+                        }
+                        if (detailView1 != null) {
+                            detailView1.setText(product1.getDescription() != null ? product1.getDescription() : "");
+                        }
+                    }
+                    // Sản phẩm 2 (nếu có)
+                    if (queryDocumentSnapshots.size() > 1) {
+                        com.example.hanoicraftcorner.model.Product product2 = queryDocumentSnapshots.getDocuments().get(1).toObject(com.example.hanoicraftcorner.model.Product.class);
+                        android.util.Log.d("FeaturedProduct", "Product 2: " + (product2 != null ? product2.getName() + ", images: " + product2.getImages() + ", desc: " + product2.getDescription() : "null"));
+                        if (product2 != null) {
+                            android.widget.ImageView imageView2 = findViewById(R.id.image_product_2);
+                            android.widget.TextView detailView2 = findViewById(R.id.image_product_detail_2);
+                            String imageUrl2 = (product2.getImages() != null && !product2.getImages().isEmpty()) ? product2.getImages().get(0) : null;
+                            if (imageView2 != null) {
+                                if (imageUrl2 != null && !imageUrl2.isEmpty()) {
+                                    com.bumptech.glide.Glide.with(this).load(imageUrl2).placeholder(R.drawable.ic_launcher_foreground).into(imageView2);
+                                } else {
+                                    imageView2.setImageResource(R.drawable.ic_launcher_foreground);
+                                }
+                            }
+                            if (detailView2 != null) {
+                                detailView2.setText(product2.getDescription() != null ? product2.getDescription() : "");
+                            }
+                        }
+                    }
+                } else {
+                    android.util.Log.d("FeaturedProduct", "No products found for user: " + currentUserId);
+
+                }
+            });
+    }
+
     // --- Cloudinary helper dùng chung cho mọi file ---
     public static void deleteCloudinaryImage(String imageUrl) {
         if (imageUrl == null || imageUrl.isEmpty()) return;
@@ -359,14 +419,26 @@ public class MainBoardArtisan extends AppCompatActivity {
 
     // Xóa sản phẩm và ảnh trên Cloudinary nếu có
     private void deleteProductWithImage(com.google.firebase.firestore.DocumentSnapshot product) {
-        deleteCloudinaryImage(product.getString("Image"));
+        // Lấy danh sách ảnh từ trường images (kiểu List<String>), kiểm tra an toàn kiểu dữ liệu
+        java.util.List<String> images = null;
+        Object imagesObj = product.get("images");
+        if (imagesObj instanceof java.util.List<?>) {
+            images = new java.util.ArrayList<>();
+            for (Object o : (java.util.List<?>) imagesObj) {
+                if (o instanceof String) images.add((String) o);
+            }
+        }
+        if (images != null && !images.isEmpty()) {
+            for (String imageUrl : images) {
+                deleteCloudinaryImage(imageUrl);
+            }
+        }
         com.google.firebase.firestore.FirebaseFirestore db = com.google.firebase.firestore.FirebaseFirestore.getInstance();
         db.collection("products").document(product.getId())
             .delete()
             .addOnSuccessListener(unused -> loadMyProducts())
             .addOnFailureListener(e -> android.widget.Toast.makeText(this, "Lỗi xóa sản phẩm!", android.widget.Toast.LENGTH_SHORT).show());
     }
-    // Sửa lỗi không reload frame_menu khi ấn lại menu
     // Thay đổi showFrame để luôn gọi loadMenuInfo nếu frame_menu được chọn
     private void showFrame(int frameId) {
         int[] frameIds = {R.id.frame_home, R.id.frame_heart, R.id.frame_wallet, R.id.frame_menu};
@@ -392,7 +464,7 @@ public class MainBoardArtisan extends AppCompatActivity {
 
     private void reloadHeartFrame() {
         loadMyProducts();
-        reloadProductInfo(email);
+        reloadProductInfo(userId);
         // Add any additional logic for Heart frame reload here
     }
 
@@ -403,21 +475,19 @@ public class MainBoardArtisan extends AppCompatActivity {
 
     private void reloadMenuFrame() {
         loadMenuInfo();
-        // Add any additional logic for Menu frame reload here
+        // Không gọi lại cập nhật featured ở đây
     }
 
     private void loadMenuInfo() {
         com.google.firebase.firestore.FirebaseFirestore db = com.google.firebase.firestore.FirebaseFirestore.getInstance();
         db.collection("users")
-            .whereEqualTo("Email", email)
+            .document(userId)
             .get()
-            .addOnSuccessListener(queryDocumentSnapshots -> {
-                if (!queryDocumentSnapshots.isEmpty()) {
-                    com.google.firebase.firestore.DocumentSnapshot userDoc = queryDocumentSnapshots.getDocuments().get(0);
-                    // Cập nhật thông tin user
-                    String username = userDoc.getString("Username");
-                    String status = userDoc.getString("Status");
-                    String avatarUrl = userDoc.getString("Avatar");
+            .addOnSuccessListener(documentSnapshot -> {
+                if (documentSnapshot.exists()) {
+                    String username = documentSnapshot.getString("name");
+                    String status = documentSnapshot.getString("status");
+                    String avatarUrl = documentSnapshot.getString("avatar");
                     android.util.Log.d("MainBoardArtisan", "avatarUrl from Firestore: " + avatarUrl);
                     android.widget.TextView tv = findViewById(R.id.text_username);
                     android.widget.TextView helloUsername = findViewById(R.id.text_greeting);
@@ -426,12 +496,12 @@ public class MainBoardArtisan extends AppCompatActivity {
                     if (tv != null && username != null) tv.setText(username);
                     if (helloUsername != null && username != null) helloUsername.setText(getString(R.string.hello_username, username));
                     if (textVerified != null && status != null) {
-                        textVerified.setText(status.equalsIgnoreCase("Verified") ? R.string.verified_text : R.string.pending_verification_text);
+                        textVerified.setText(status.equalsIgnoreCase("verified") ? R.string.verified_text : R.string.pending_verification_text);
                         android.view.ViewGroup parent = (android.view.ViewGroup) textVerified.getParent();
                         int idx = parent.indexOfChild(textVerified);
                         if (idx != -1 && idx + 1 < parent.getChildCount()) {
                             android.view.View dotView = parent.getChildAt(idx + 1);
-                            dotView.setBackgroundResource(status.equalsIgnoreCase("Verified") ? R.drawable.green_dot_circle : R.drawable.yellow_dot_circle);
+                            dotView.setBackgroundResource(status.equalsIgnoreCase("verified") ? R.drawable.green_dot_circle : R.drawable.yellow_dot_circle);
                         }
                     }
                     // Load avatar bằng Glide
@@ -446,83 +516,7 @@ public class MainBoardArtisan extends AppCompatActivity {
                         android.util.Log.w("MainBoardArtisan", "avatarUrl is null or empty, using default avatar");
                         imageAvatar.setImageResource(R.drawable.ic_baseline_person_24);
                     }
-                    // Cập nhật sản phẩm nổi bật
-                    com.google.firebase.firestore.FirebaseFirestore.getInstance().collection("products")
-                        .whereEqualTo("email", email)
-                        .get()
-                        .addOnSuccessListener(productsSnapshot -> {
-                            int productCount = productsSnapshot.size();
-                            android.widget.TextView textStatus = findViewById(R.id.text_status);
-                            android.widget.TextView textNoProducts = findViewById(R.id.text_no_products);
-                            android.widget.LinearLayout linearFeatured1 = findViewById(R.id.linear_featured_1);
-                            android.widget.LinearLayout linearFeatured2 = findViewById(R.id.linear_featured_2);
-                            android.widget.LinearLayout linearManageProducts = findViewById(R.id.btn_manage_products);
-                            android.widget.ImageView imageProduct1 = findViewById(R.id.image_product_1);
-                            android.widget.TextView imageProductDetail1 = findViewById(R.id.image_product_detail_1);
-                            android.widget.ImageView imageProduct2 = findViewById(R.id.image_product_2);
-                            android.widget.TextView imageProductDetail2 = findViewById(R.id.image_product_detail_2);
-                            if (productCount == 0) {
-                                if (textNoProducts != null) textNoProducts.setVisibility(View.VISIBLE);
-                                if (linearFeatured1 != null) linearFeatured1.setVisibility(View.GONE);
-                                if (linearFeatured2 != null) linearFeatured2.setVisibility(View.GONE);
-                                if (linearManageProducts != null) {
-                                    linearManageProducts.setEnabled(false);
-                                    linearManageProducts.setAlpha(0.5f);
-                                }
-                                if (imageProduct1 != null) imageProduct1.setImageResource(R.drawable.ic_launcher_foreground);
-                                if (imageProductDetail1 != null) imageProductDetail1.setText("");
-                                if (imageProduct2 != null) imageProduct2.setImageResource(R.drawable.ic_launcher_foreground);
-                                if (imageProductDetail2 != null) imageProductDetail2.setText("");
-                            } else {
-                                if (textNoProducts != null) textNoProducts.setVisibility(View.GONE);
-                                if (linearFeatured1 != null) linearFeatured1.setVisibility(View.VISIBLE);
-                                if (linearFeatured2 != null) linearFeatured2.setVisibility(View.VISIBLE);
-                                if (linearManageProducts != null) {
-                                    linearManageProducts.setEnabled(true);
-                                    linearManageProducts.setAlpha(1f);
-                                }
-                                // Lấy sản phẩm đầu tiên làm sản phẩm nổi bật 1
-                                if (imageProduct1 != null && imageProductDetail1 != null && !productsSnapshot.isEmpty()) {
-                                    com.google.firebase.firestore.DocumentSnapshot firstProduct = productsSnapshot.getDocuments().get(0);
-                                    String imageUrl1 = firstProduct.getString("Image");
-                                    String description1 = firstProduct.getString("Description");
-                                    if (imageUrl1 != null && !imageUrl1.isEmpty()) {
-                                        try {
-                                            com.bumptech.glide.Glide.with(this).load(imageUrl1).into(imageProduct1);
-                                        } catch (Exception e) {
-                                            android.util.Log.e("MainBoardArtisan", "Lỗi load ảnh sản phẩm nổi bật 1", e);
-                                        }
-                                    } else {
-                                        imageProduct1.setImageResource(R.drawable.ic_launcher_foreground);
-                                    }
-                                    imageProductDetail1.setText(description1 != null ? description1 : "");
-                                }
-                                // Lấy sản phẩm thứ hai làm sản phẩm nổi bật 2 (nếu có)
-                                if (imageProduct2 != null && imageProductDetail2 != null && productsSnapshot.size() > 1) {
-                                    com.google.firebase.firestore.DocumentSnapshot secondProduct = productsSnapshot.getDocuments().get(1);
-                                    String imageUrl2 = secondProduct.getString("Image");
-                                    String description2 = secondProduct.getString("Description");
-                                    if (imageUrl2 != null && !imageUrl2.isEmpty()) {
-                                        try {
-                                            com.bumptech.glide.Glide.with(this).load(imageUrl2).into(imageProduct2);
-                                        } catch (Exception e) {
-                                            android.util.Log.e("MainBoardArtisan", "Lỗi load ảnh sản phẩm nổi bật 2", e);
-                                        }
-                                    } else {
-                                        imageProduct2.setImageResource(R.drawable.ic_launcher_foreground);
-                                    }
-                                    imageProductDetail2.setText(description2 != null ? description2 : "");
-                                } else if (imageProduct2 != null && imageProductDetail2 != null) {
-                                    imageProduct2.setImageResource(R.drawable.ic_launcher_foreground);
-                                    imageProductDetail2.setText("");
-                                }
-                            }
-                            if (textStatus != null) {
-                                textStatus.setText(getString(R.string.product_count, productCount));
-                                textStatus.setVisibility(View.VISIBLE);
-                            }
-                        })
-                        .addOnFailureListener(e -> android.util.Log.e("MainBoardArtisan", "Lỗi truy vấn Products", e));
+                    // Không reset/cập nhật sản phẩm nổi bật ở đây nữa
                 }
             });
     }
@@ -530,13 +524,12 @@ public class MainBoardArtisan extends AppCompatActivity {
     private void loadHomeInfo() {
         com.google.firebase.firestore.FirebaseFirestore db = com.google.firebase.firestore.FirebaseFirestore.getInstance();
         db.collection("users")
-            .whereEqualTo("Email", email)
+            .document(userId)
             .get()
-            .addOnSuccessListener(queryDocumentSnapshots -> {
-                if (!queryDocumentSnapshots.isEmpty()) {
-                    com.google.firebase.firestore.DocumentSnapshot userDoc = queryDocumentSnapshots.getDocuments().get(0);
-                    String username = userDoc.getString("Username");
-                    String avatarUrl = userDoc.getString("Avatar");
+            .addOnSuccessListener(documentSnapshot -> {
+                if (documentSnapshot.exists()) {
+                    String username = documentSnapshot.getString("name");
+                    String avatarUrl = documentSnapshot.getString("avatar");
                     android.widget.TextView helloUsername = findViewById(R.id.text_hello_username);
                     android.widget.ImageView imageAvatarHome = findViewById(R.id.image_avatar_home);
                     if (helloUsername != null && username != null) {
@@ -583,10 +576,20 @@ public class MainBoardArtisan extends AppCompatActivity {
             btnCategoryRight.setVisibility(View.GONE);
             return;
         }
-        for (int i = 0; i < btnCategories.length; i++) {
-            btnCategories[i].setText(allCategories.get(categoryStartIndex + i));
+        for (android.widget.Button btnCategory : btnCategories) {
+            btnCategory.setText(allCategories.get(categoryStartIndex + java.util.Arrays.asList(btnCategories).indexOf(btnCategory)));
         }
-        selectCategoryButton(selectedCategoryIndex); // Always update highlight after changing text
+        if (selectedCategoryIndex >= 0 && selectedCategoryIndex < btnCategories.length) {
+            selectCategoryButton(selectedCategoryIndex);
+        } else {
+            // Deactivate all buttons if no valid selection
+            for (android.widget.Button btnCategory : btnCategories) {
+                btnCategory.setBackgroundResource(android.R.color.transparent);
+                btnCategory.setTextColor(getColor(R.color.primary));
+            }
+            // Hiện tất cả sản phẩm nếu không có nút nào được chọn
+            loadFeaturedProducts();
+        }
         btnCategoryLeft.setVisibility(categoryStartIndex == 0 ? View.GONE : View.VISIBLE);
         btnCategoryRight.setVisibility(categoryStartIndex + 3 >= allCategories.size() ? View.GONE : View.VISIBLE);
     }
@@ -603,21 +606,15 @@ public class MainBoardArtisan extends AppCompatActivity {
     // Hàm lọc sản phẩm nổi bật theo category
     private void loadFeaturedProductsByCategory(String category) {
         com.google.firebase.firestore.FirebaseFirestore db = com.google.firebase.firestore.FirebaseFirestore.getInstance();
-        java.util.List<java.util.Map<String, Object>> featuredList = new java.util.ArrayList<>();
+        java.util.List<Product> featuredList = new java.util.ArrayList<>();
         db.collection("products")
-            .whereEqualTo("Category", category)
+            .whereEqualTo("category", category)
             .get()
             .addOnSuccessListener(productsSnap -> {
-                for (com.google.firebase.firestore.DocumentSnapshot product : productsSnap.getDocuments()) {
-                    String img = product.getString("Image");
-                    String name = product.getString("Name");
-                    String price = product.getString("Price");
-                    if (img != null && name != null && price != null) {
-                        java.util.Map<String, Object> map = new java.util.HashMap<>();
-                        map.put("Image", img);
-                        map.put("Name", name);
-                        map.put("Price", price);
-                        featuredList.add(map);
+                for (com.google.firebase.firestore.DocumentSnapshot productDoc : productsSnap.getDocuments()) {
+                    Product product = productDoc.toObject(Product.class);
+                    if (product != null) {
+                        featuredList.add(product);
                     }
                 }
                 featuredProductsAdapter.setProducts(featuredList);
@@ -627,14 +624,21 @@ public class MainBoardArtisan extends AppCompatActivity {
     // Highlight selected category button with background and text color
     private int selectedCategoryIndex = 0;
     private void selectCategoryButton(int selectedIndex) {
-        selectedCategoryIndex = selectedIndex;
-        for (int i = 0; i < btnCategories.length; i++) {
-            if (i == selectedIndex) {
-                btnCategories[i].setBackgroundResource(R.drawable.category_button_background);
-                btnCategories[i].setTextColor(getColor(android.R.color.white));
-            } else {
-                btnCategories[i].setBackgroundResource(android.R.color.transparent);
-                btnCategories[i].setTextColor(getColor(R.color.primary));
+        // Nếu nút đã active thì deactive nó, ngược lại thì active
+        if (this.selectedCategoryIndex == selectedIndex) {
+            btnCategories[selectedIndex].setBackgroundResource(android.R.color.transparent);
+            btnCategories[selectedIndex].setTextColor(getColor(R.color.primary));
+            this.selectedCategoryIndex = -1;
+        } else {
+            this.selectedCategoryIndex = selectedIndex;
+            for (int i = 0; i < btnCategories.length; i++) {
+                if (i == selectedIndex) {
+                    btnCategories[i].setBackgroundResource(R.drawable.category_button_background);
+                    btnCategories[i].setTextColor(getColor(android.R.color.white));
+                } else {
+                    btnCategories[i].setBackgroundResource(android.R.color.transparent);
+                    btnCategories[i].setTextColor(getColor(R.color.primary));
+                }
             }
         }
     }

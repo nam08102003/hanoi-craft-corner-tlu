@@ -9,14 +9,14 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.hanoicraftcorner.R;
+import com.example.hanoicraftcorner.model.Product;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class FeaturedProductsAdapter extends RecyclerView.Adapter<FeaturedProductsAdapter.ProductViewHolder> {
-    private final List<Map<String, Object>> products = new ArrayList<>();
+    private final List<Product> products = new ArrayList<>();
 
-    public void setProducts(List<Map<String, Object>> productList) {
+    public void setProducts(List<Product> productList) {
         products.clear();
         if (productList != null) products.addAll(productList);
         notifyDataSetChanged();
@@ -48,14 +48,21 @@ public class FeaturedProductsAdapter extends RecyclerView.Adapter<FeaturedProduc
             tvProductName = itemView.findViewById(R.id.tvProductName);
             tvProductPrice = itemView.findViewById(R.id.tvProductPrice);
         }
-        public void bind(Map<String, Object> product) {
-            Object nameObj = product.get("Name");
-            tvProductName.setText(nameObj != null ? nameObj.toString() : "");
-            Object priceObj = product.get("Price");
-            String price = priceObj != null ? priceObj.toString() : "";
-            tvProductPrice.setText(price.isEmpty() ? "" : price + "₫");
-            Object imageObj = product.get("Image");
-            String imageUrl = imageObj != null ? imageObj.toString() : "";
+        public void bind(Product product) {
+            tvProductName.setText(product.getName() != null ? product.getName() : "");
+            String price = String.valueOf(product.getPrice());
+            if (!price.isEmpty()) {
+                try {
+                    long priceValue = Long.parseLong(price);
+                    String formattedPrice = String.format("%,d", priceValue).replace(',', '.');
+                    tvProductPrice.setText(formattedPrice + "₫");
+                } catch (NumberFormatException e) {
+                    tvProductPrice.setText(price + "₫");
+                }
+            } else {
+                tvProductPrice.setText("");
+            }
+            String imageUrl = (product.getImages() != null && !product.getImages().isEmpty()) ? product.getImages().get(0) : "";
             if (!imageUrl.isEmpty()) {
                 Glide.with(imgProduct.getContext()).load(imageUrl).placeholder(R.drawable.ic_launcher_foreground).into(imgProduct);
             } else {

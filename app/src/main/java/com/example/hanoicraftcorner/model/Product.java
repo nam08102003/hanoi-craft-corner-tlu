@@ -5,51 +5,35 @@ import java.util.Date;
 import java.util.List;
 
 public class Product {
-    private String artisanId;
-    private String categoryId;
     private String name;
     private String description;
-    private double price;
-    private int quantity;
-    private int status;
-    private List<String> imageUrls; // From product_images
-
+    private String category; // reference to categories
+    private String price;
+    private String quantity;
+    private String status;
+    private List<String> images;
+    private String user_id; // reference to users
     @ServerTimestamp
-    private Date createdAt;
+    private Date created_at;
     @ServerTimestamp
-    private Date updatedAt;
+    private Date updated_at;
 
     public Product() {
         // Required for Firestore
     }
 
-    public Product(String artisanId, String categoryId, String name, String description, double price, int quantity, int status, List<String> imageUrls) {
-        this.artisanId = artisanId;
-        this.categoryId = categoryId;
-        this.name = name;
-        this.description = description;
-        this.price = price;
-        this.quantity = quantity;
-        this.status = status;
-        this.imageUrls = imageUrls;
+    public Product(String name, String description, String category, String price, String quantity, String status, List<String> images, String user_id) {
+        this.name = name != null ? name : "";
+        this.description = description != null ? description : "";
+        this.category = category != null ? category : "";
+        this.price = price != null ? price : "";
+        this.quantity = quantity != null ? quantity : "";
+        this.status = status != null ? status : "";
+        this.images = images;
+        this.user_id = user_id != null ? user_id : "";
     }
 
-    public String getArtisanId() {
-        return artisanId;
-    }
-
-    public void setArtisanId(String artisanId) {
-        this.artisanId = artisanId;
-    }
-
-    public String getCategoryId() {
-        return categoryId;
-    }
-
-    public void setCategoryId(String categoryId) {
-        this.categoryId = categoryId;
-    }
-
+    // Getters and Setters
     public String getName() {
         return name;
     }
@@ -66,51 +50,67 @@ public class Product {
         this.description = description;
     }
 
-    public double getPrice() {
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public String getPrice() {
         return price;
     }
 
-    public void setPrice(double price) {
-        this.price = price;
+    public void setPrice(String price) {
+        this.price = price != null ? price : "";
     }
 
-    public int getQuantity() {
+    public String getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
+    public void setQuantity(String quantity) {
+        this.quantity = quantity != null ? quantity : "";
     }
 
-    public int getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
-        this.status = status;
+    public void setStatus(String status) {
+        this.status = status != null ? status : "";
     }
 
-    public List<String> getImageUrls() {
-        return imageUrls;
+    public List<String> getImages() {
+        return images;
     }
 
-    public void setImageUrls(List<String> imageUrls) {
-        this.imageUrls = imageUrls;
+    public void setImages(List<String> images) {
+        this.images = images;
     }
 
-    public Date getCreatedAt() {
-        return createdAt;
+    public String getUser_id() {
+        return user_id;
     }
 
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
+    public void setUser_id(String user_id) {
+        this.user_id = user_id != null ? user_id : "";
     }
 
-    public Date getUpdatedAt() {
-        return updatedAt;
+    public Date getCreated_at() {
+        return created_at;
     }
 
-    public void setUpdatedAt(Date updatedAt) {
-        this.updatedAt = updatedAt;
+    public void setCreated_at(Date created_at) {
+        this.created_at = created_at;
     }
-} 
+
+    public Date getUpdated_at() {
+        return updated_at;
+    }
+
+    public void setUpdated_at(Date updated_at) {
+        this.updated_at = updated_at;
+    }
+}
