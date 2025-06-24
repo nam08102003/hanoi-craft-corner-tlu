@@ -1,0 +1,17 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Background xám nhạt -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#F0F0F0" />
+            <corners android:radius="8dp" />
+        </shape>
+    </item>
+
+    <!-- Icon giả lập hình ảnh -->
+    <item android:gravity="center">
+        <bitmap
+            android:src="@drawable/ic_image_placeholder"
+            android:gravity="center"
+            android:tileMode="disabled" />
+    </item>
+</layer-list>

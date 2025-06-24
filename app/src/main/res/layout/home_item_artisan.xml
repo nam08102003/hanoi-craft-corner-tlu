@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:padding="8dp"
+        android:layout_marginEnd="12dp"
+        tools:ignore="MissingConstraints">
+
+        <ImageView
+            android:id="@+id/imageAvatar"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:scaleType="centerCrop"
+            android:background="@drawable/circle_background"
+            android:clipToOutline="true" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Nguyễn Thị Lan"
+                android:maxLines="2"
+                android:textStyle="bold"
+                android:textColor="#000000"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/tvLocation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="• Gốm Bát Tràng"
+                android:textColor="#444444"
+                android:textSize="14sp"
+                android:maxLines="1"
+                android:layout_marginTop="4dp"/>
+
+            <TextView
+                android:id="@+id/tvIntroduce"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="“35 năm sống với nghề thủ công…”"
+                android:textColor="#666666"
+                android:textSize="14sp"
+                android:maxLines="@integer/material_motion_duration_long_2"
+                android:layout_marginTop="4dp" />
+
+            <Button
+                android:id="@+id/btnShop"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Gian hàng"
+                android:textAllCaps="false"
+                android:textColor="@android:color/white"
+                android:background="@drawable/btn_shop_background"
+                android:layout_marginTop="12dp"
+                android:paddingHorizontal="24dp"
+                android:layout_gravity="center"
+                android:paddingVertical="8dp"/>
+        </LinearLayout>
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
