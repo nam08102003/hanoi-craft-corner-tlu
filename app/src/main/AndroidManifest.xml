@@ -20,7 +20,23 @@
         android:theme="@style/Theme.HaNoiCraftCorner"
         tools:targetApi="31">
         <activity
+<<<<<<< Updated upstream
             android:name=".AdminCategoryActivity"
+=======
+            android:name=".main.admin.AdminUserManagementActivity"
+            android:exported="false" />
+        <activity
+            android:name=".main.admin.AdminBranchDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".main.admin.AdminBrandActivity"
+            android:exported="false" />
+        <activity
+            android:name=".main.admin.AdminUserDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".main.admin.AdminCategoryActivity"
+>>>>>>> Stashed changes
             android:exported="false" />
         <activity
             android:name=".main.artisan.ArtisanInfo"
@@ -59,8 +75,15 @@
             android:name=".main.opening.WelcomeActivity"
             android:exported="true" />
         <activity
+<<<<<<< Updated upstream
             android:name=".main.admin.AdminCategoryActivity"
             android:exported="true">
+=======
+            android:name=".main.admin.AdminDashboardActivity"
+            android:exported="true"
+            tools:ignore="DuplicateActivity"
+            tools:node="replace">
+>>>>>>> Stashed changes
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -77,4 +77,8 @@ dependencies {
     implementation(libs.okhttp)
     implementation(libs.glide)
     annotationProcessor(libs.compiler)
+
+    implementation("com.google.code.gson:gson:2.10.1")
+    implementation ("com.google.android.material:material:1.11.0")
+
 }

@@ -4,6 +4,7 @@ import static com.example.hanoicraftcorner.R.*;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -25,7 +26,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.hanoicraftcorner.R;
 import com.example.hanoicraftcorner.interfaces.OnCategoryListener;
 import com.example.hanoicraftcorner.model.Category;
+<<<<<<< Updated upstream
 import com.example.hanoicraftcorner.adapter.CategoryAdapter;
+=======
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+>>>>>>> Stashed changes
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
@@ -60,6 +65,29 @@ public class AdminCategoryActivity extends AppCompatActivity implements OnCatego
 //            return insets;
 //        });
 
+        BottomNavigationView bottomNav = findViewById(R.id.bottomNavigation);
+        bottomNav.setSelectedItemId(R.id.nav_category);
+        bottomNav.setOnItemSelectedListener(item -> {
+            int id = item.getItemId();
+            if (id == R.id.nav_home) {
+                startActivity(new Intent(this, AdminDashboardActivity.class));
+                return true;
+            } else if (id == R.id.nav_user) {
+                startActivity(new Intent(this, AdminUserManagementActivity.class));
+                return true;
+            } else if (id == R.id.nav_category) {
+                startActivity(new Intent(this, AdminCategoryActivity.class));
+                return true;
+            }  else if (id == R.id.nav_shop) {
+                startActivity(new Intent(this, AdminBrandActivity.class));
+                return true;
+            } else if (id == R.id.nav_menu) {
+//                startActivity(new Intent(this, MenuActivity.class));
+                return true;
+            }
+            return false;
+        });
+
         EditText edtSearch = findViewById(R.id.edtSearch);
         Button btnSearch = findViewById(R.id.btnSearch);
 
@@ -70,7 +98,11 @@ public class AdminCategoryActivity extends AppCompatActivity implements OnCatego
 
         categoryList = new ArrayList<>();
         docIdList = new ArrayList<>();
+<<<<<<< Updated upstream
         adapter = new CategoryAdapter(categoryList, docIdList, this, this);
+=======
+        adapter = new AdminCategoryAdapter(categoryList, docIdList, this,this);
+>>>>>>> Stashed changes
         recyclerView.setAdapter(adapter);
         recyclerView.setAdapter(adapter);
 

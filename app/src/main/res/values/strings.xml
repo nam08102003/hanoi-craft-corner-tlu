@@ -70,5 +70,19 @@
     <string name="change">Thay đổi</string>
     <string name="cover_hint">Ấn vào đây để thay đổi ảnh bìa</string>
     <string name="remove_button_desc">Remove item</string>
+<<<<<<< Updated upstream
 
+=======
+    <string-array name="status_filter">
+        <item>Tất cả</item>
+        <item>Đã duyệt</item>
+        <item>Chờ duyệt</item>
+        <item>Từ chối</item>
+    </string-array>
+
+    <string-array name="sort_options">
+        <item>Mới nhất</item>
+        <item>Cũ nhất</item>
+    </string-array>
+>>>>>>> Stashed changes
 </resources>
